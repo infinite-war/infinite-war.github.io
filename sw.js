@@ -21,23 +21,19 @@ self.addEventListener('active', function () {
 });
 
 var precacheUrls = [
-<%
-precacheUrls.forEach(function (url) {
-%>'<%- url %>',<%
-});
-%>
+'/','/posts/undefined/',
 ];
 toolbox.precache(precacheUrls);
-toolbox.options = <%- JSON.stringify(opts) %>;
+toolbox.options = {"networkTimeoutSeconds":5};
 
-<%
-routes.forEach(function (route) {
-  var pattern = '"' + route.pattern + '"';
-  if (route.pattern instanceof RegExp) {
-    pattern = route.pattern.toString();
-  }
-%>
-toolbox.router.any(<%- pattern %>, toolbox.<%- route.strategy %>);
-<%
-});
-%>
+
+toolbox.router.any(/(hm\.baidu\.com|google\.com|api\.i-meto\.com|api\.github\.com|clustrmaps\.com|cdn\.jsdelivr\.net)/, toolbox.networkOnly);
+
+toolbox.router.any(/(icon-lib|font-mustom|MPlayer)/, toolbox.networkOnly);
+
+toolbox.router.any(/.*\/asset\/part\/.+\.(html)(\?.*)?$/, toolbox.cacheFirst);
+
+toolbox.router.any(/.+\.(jpg|jpeg|png|gif|svg|webp|ico|eot|ttf|woff|woff2|otf|mtn|moc)(\?.*)?$/, toolbox.cacheFirst);
+
+toolbox.router.any(/\//, toolbox.networkFirst);
+
