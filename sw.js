@@ -21,7 +21,7 @@ self.addEventListener('active', function () {
 });
 
 var precacheUrls = [
-'/','/posts/16107/',
+'/','/posts/16107/','/baidu_verify_NhlEir5LAV.html','/baidu_verify_zQef3H7nga.html','/googlead7e415d5708bb6e.html','/code/yaoplayer.js','/code/yao2048.js','/about/index.html','/extension/content.json','/gallery/index.html','/letter/index.html','/resume/index.html','/icons/index.html','/library/index.html','/records/content.json','/records/index.html','/extension/resume/index.js','/extension/resume/index.css','/extension/test/index.html','/extension/letter/index.js','/extension/letter/index.css','/extension/resume/english/index.html','/extension/resume/chinese/index.html','/extension/resume/chinese/data.json','/extension/resume/english/data.json','/extension/letter/chinese/data.json','/extension/letter/english/data.json','/extension/letter/chinese/index.html','/extension/letter/english/index.html',
 ];
 toolbox.precache(precacheUrls);
 toolbox.options = {"networkTimeoutSeconds":5};
