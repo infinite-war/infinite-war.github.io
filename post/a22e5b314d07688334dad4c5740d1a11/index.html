@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>MySQL80 操作要点笔记 | infinite-war の BLOG</title>
+    <meta name="generator" content="VuePress 1.9.7">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+    <meta name="description" content="# 前言参考视频：BV1Vy4y1z7EXCSDN: https://blog.csdn.net/INFINITE_WAR/article/details/120408155一些频繁出现的用例名字：emp  员工信息表dept  部门信息表ename  员工名job  工作sal  工资de ...">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#ffffff">
+    <meta name="google-site-verification" content="DR-3xvCA7YBP7TIeg7__j5lxaniGh2pzocrfywyn8o0">
+    <meta name="baidu-site-verification" content="zQef3H7nga">
+    
+    <link rel="preload" href="./assets/css/0.styles.ab82154a.css" as="style"><link rel="preload" href="./assets/js/app.152d2abe.js" as="script"><link rel="preload" href="./assets/js/5.45f84343.js" as="script"><link rel="preload" href="./assets/js/30.3e2cac84.js" as="script"><link rel="preload" href="./assets/js/10.e02dcdbc.js" as="script"><link rel="preload" href="./assets/js/7.6b3198e2.js" as="script"><link rel="prefetch" href="./assets/js/11.56ca4439.js"><link rel="prefetch" href="./assets/js/12.e7263128.js"><link rel="prefetch" href="./assets/js/13.6aa36547.js"><link rel="prefetch" href="./assets/js/14.17d1cb9e.js"><link rel="prefetch" href="./assets/js/15.74bd3f85.js"><link rel="prefetch" href="./assets/js/16.6cb58eaa.js"><link rel="prefetch" href="./assets/js/17.a2418203.js"><link rel="prefetch" href="./assets/js/18.0ce3e861.js"><link rel="prefetch" href="./assets/js/19.d38b8843.js"><link rel="prefetch" href="./assets/js/20.c056825b.js"><link rel="prefetch" href="./assets/js/21.55f4c10c.js"><link rel="prefetch" href="./assets/js/22.04dd41d1.js"><link rel="prefetch" href="./assets/js/23.1c3c301b.js"><link rel="prefetch" href="./assets/js/24.cd8025ea.js"><link rel="prefetch" href="./assets/js/25.ba1b9f93.js"><link rel="prefetch" href="./assets/js/26.6682378c.js"><link rel="prefetch" href="./assets/js/27.b37436f6.js"><link rel="prefetch" href="./assets/js/28.a5979a1e.js"><link rel="prefetch" href="./assets/js/29.b5265440.js"><link rel="prefetch" href="./assets/js/3.9a5ec62e.js"><link rel="prefetch" href="./assets/js/31.6c7014c4.js"><link rel="prefetch" href="./assets/js/32.3f06e55b.js"><link rel="prefetch" href="./assets/js/33.b1d68207.js"><link rel="prefetch" href="./assets/js/34.76d77190.js"><link rel="prefetch" href="./assets/js/35.4683a28e.js"><link rel="prefetch" href="./assets/js/36.9cf1d52f.js"><link rel="prefetch" href="./assets/js/37.3f6975cf.js"><link rel="prefetch" href="./assets/js/38.f88fc48d.js"><link rel="prefetch" href="./assets/js/39.f219d981.js"><link rel="prefetch" href="./assets/js/4.dfb684c6.js"><link rel="prefetch" href="./assets/js/40.ff3307ef.js"><link rel="prefetch" href="./assets/js/41.50e1e4a2.js"><link rel="prefetch" href="./assets/js/42.375a133d.js"><link rel="prefetch" href="./assets/js/43.a125d1e0.js"><link rel="prefetch" href="./assets/js/44.54249944.js"><link rel="prefetch" href="./assets/js/45.17c8ad02.js"><link rel="prefetch" href="./assets/js/46.1e1ff28c.js"><link rel="prefetch" href="./assets/js/47.805830d4.js"><link rel="prefetch" href="./assets/js/48.edec476d.js"><link rel="prefetch" href="./assets/js/49.44e0d779.js"><link rel="prefetch" href="./assets/js/50.f607e4f6.js"><link rel="prefetch" href="./assets/js/6.a2b9c671.js"><link rel="prefetch" href="./assets/js/8.0d136561.js"><link rel="prefetch" href="./assets/js/9.11f39998.js"><link rel="prefetch" href="./assets/js/vuejs-paginate.b3baa744.js">
+    <link rel="stylesheet" href="./assets/css/0.styles.ab82154a.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="GlobalLayout skin-jshine" data-v-5f6ffb84><!----> <div class="Launch" data-v-2d5332d6 data-v-5f6ffb84><div class="avatar" style="background-image:url('/assets/img/avatar.png');" data-v-2d5332d6></div></div> <div class="Spinner " data-v-4a1f0306 data-v-5f6ffb84></div> <div class="Header" data-v-a012f084 data-v-5f6ffb84><div class="ext " data-v-a012f084><i class="fas fa-cube" data-v-a012f084></i></div> <div class="sitename" data-v-a012f084><em><span>infinite-war's</span></em><strong><span>BLOG</span></strong></div> <div class="ext " data-v-a012f084><i class="fas fa-search" data-v-a012f084></i></div></div> <div class="Goingto" data-v-106a8802 data-v-5f6ffb84><div class="top" data-v-106a8802><i class="fas fa-arrow-up" data-v-106a8802></i></div> <div class="bottom" data-v-106a8802><i class="fas fa-arrow-down" data-v-106a8802></i></div></div> <div class="Addin" data-v-68b01994 data-v-5f6ffb84><div class="top " data-v-68b01994><i class="fas fa-ad" data-v-68b01994></i></div> <div class="bottom " data-v-68b01994><i class="fas fa-qrcode" data-v-68b01994></i></div> <!----></div> <!----> <div class="frame" data-v-5f6ffb84><div class="main" data-v-5f6ffb84><div class="drawer" data-v-5f6ffb84><div class="Drawer" data-v-68407f5a data-v-5f6ffb84><div class="Brand card" data-v-bb741bc0 data-v-68407f5a><div class="caption ifSmallest" data-v-bb741bc0><span class="icon" data-v-bb741bc0><i class="fas fa-id-card fa-fw" data-v-bb741bc0></i></span> <span data-v-bb741bc0>CARD</span></div> <div class="avatar" style="background-image:url('/assets/img/brand.png');" data-v-bb741bc0></div> <div class="inner" data-v-bb741bc0><div class="author" data-v-bb741bc0>Mitchell</div> <div class="signature" data-v-bb741bc0>issue, func, flow, std, solve</div> <div class="counter" data-v-bb741bc0><span title="Count of Posts" data-v-bb741bc0><i class="fas fa-archive fa-fw" data-v-bb741bc0></i>
+        30 </span>|
+      <span title="Count of Categories" data-v-bb741bc0><i class="fas fa-folder-open fa-fw" data-v-bb741bc0></i>
+        15 </span>|
+      <span title="Count of Tags" data-v-bb741bc0><i class="fas fa-tags fa-fw" data-v-bb741bc0></i>
+        22
+      </span></div> <div class="contact" data-v-bb741bc0><a target="_blank" href="https://github.com/infinite-war" title="infinite-war" data-v-bb741bc0><i class="fab fa-github fa-fw"></i></a><a target="_blank" href="mailto://969557028@qq.com" title="969557028@qq.com" data-v-bb741bc0><i class="fas fa-envelope fa-fw"></i></a><a target="_blank" href="tencent://Message/?uin=969557028" title="969557028" data-v-bb741bc0><i class="fab fa-qq fa-fw"></i></a></div></div> <div class="minimize ifSmallest" data-v-bb741bc0></div></div> <div class="Menu" data-v-098eaa92 data-v-68407f5a><div class="card" data-v-098eaa92><div class="caption" data-v-098eaa92><span class="icon" data-v-098eaa92><i class="fas fa-sitemap fa-fw"></i></span> <span data-v-098eaa92>MENU</span></div> <div class="inner" data-v-098eaa92><a href="/" class="router-link-active" data-v-098eaa92><span class="icon" data-v-098eaa92><i class="fas fa-home fa-fw"></i></span> <span data-v-098eaa92>Home</span></a><a href="/archive/" data-v-098eaa92><span class="icon" data-v-098eaa92><i class="fas fa-archive fa-fw"></i></span> <span data-v-098eaa92>Archive</span></a><a href="/codes/" data-v-098eaa92><span class="icon" data-v-098eaa92><i class="fas fa-box fa-fw"></i></span> <span data-v-098eaa92>Code Library</span></a><a href="/icons/" data-v-098eaa92><span class="icon" data-v-098eaa92><i class="fas fa-icons fa-fw"></i></span> <span data-v-098eaa92>Icon Font Library</span></a><a href="/records/" data-v-098eaa92><span class="icon" data-v-098eaa92><i class="fas fa-edit fa-fw"></i></span> <span data-v-098eaa92>Records</span></a><a href="/gallery/" data-v-098eaa92><span class="icon" data-v-098eaa92><i class="fas fa-images fa-fw"></i></span> <span data-v-098eaa92>Gallery</span></a><a href="/resume/" data-v-098eaa92><span class="icon" data-v-098eaa92><i class="fas fa-paper-plane fa-fw"></i></span> <span data-v-098eaa92>Resume Tips</span></a><a href="/letter/" data-v-098eaa92><span class="icon" data-v-098eaa92><i class="fas fa-file-contract fa-fw"></i></span> <span data-v-098eaa92>Cover Letter Tips</span></a><a href="/about/" data-v-098eaa92><span class="icon" data-v-098eaa92><i class="fas fa-user fa-fw"></i></span> <span data-v-098eaa92>About</span></a></div> <div class="minimize" data-v-098eaa92></div></div></div> <div class="Skin card" data-v-5752a7b7 data-v-68407f5a><div class="caption" data-v-5752a7b7><span class="icon" data-v-5752a7b7><i class="fas fa-tshirt fa-fw" data-v-5752a7b7></i></span> <span data-v-5752a7b7>SKIN</span></div> <div class="inner" data-v-5752a7b7><div title="Default" class="color " style="background:#696969;" data-v-5752a7b7></div><div title="White &amp; Black" class="color " style="background:linear-gradient(120deg, #666666, #999999, #333333);" data-v-5752a7b7></div><div title="JShine" class="color active" style="background:linear-gradient(120deg, #ff3300, #cc66ff, #00ccff);" data-v-5752a7b7></div><div title="Memariani" class="color " style="background:linear-gradient(120deg, #cc6699, #6666cc, #33cccc);" data-v-5752a7b7></div></div> <div class="minimize" data-v-5752a7b7></div></div> <div class="Settings card" data-v-8ef0d620 data-v-68407f5a><div class="caption" data-v-8ef0d620><span class="icon" data-v-8ef0d620><i class="fas fa-cog fa-fw" data-v-8ef0d620></i></span> <span data-v-8ef0d620>SETTINGS</span></div> <div class="inner" data-v-8ef0d620><div class=" " data-v-8ef0d620><span class="icon" data-v-8ef0d620><i class="fas fa-adjust fa-fw"></i></span> <span data-v-8ef0d620>Night Shift</span> <div class="switch" data-v-8ef0d620></div></div><div class=" " data-v-8ef0d620><span class="icon" data-v-8ef0d620><i class="fas fa-video-slash fa-fw"></i></span> <span data-v-8ef0d620>Disable Canvas</span> <div class="switch" data-v-8ef0d620></div></div><div class="active " data-v-8ef0d620><span class="icon" data-v-8ef0d620><i class="fas fa-globe-asia fa-fw"></i></span> <span data-v-8ef0d620>简体中文</span> <div class="switch" data-v-8ef0d620></div></div></div> <div class="minimize" data-v-8ef0d620></div></div></div></div> <div class="center " data-v-5f6ffb84><div class="Translate card" data-v-bbd4da56 data-v-5f6ffb84><div class="bar " data-v-bbd4da56><div title="Highlight words to translate - Supported by Baidu Translation API" class="sq highlight" data-v-bbd4da56><i class="fas fa-highlighter" data-v-bbd4da56></i></div> <div class="locales" data-v-bbd4da56><div data-v-bbd4da56>中文</div> <span data-v-bbd4da56>|</span> <div data-v-bbd4da56>English</div> <span data-v-bbd4da56>|</span> <div data-v-bbd4da56>日本語</div> <!----></div> <div title="Click to copy highlighted content above translation bar" class="sq copy" data-v-bbd4da56><i class="fas fa-copy" data-v-bbd4da56></i></div></div> <!----></div> <div data-v-5f6ffb84><div class="Post" data-v-55aed3a6 data-v-5f6ffb84><div class="Article card fix " data-v-3caaac61 data-v-55aed3a6><div class="caption" data-v-3caaac61><span class="icon" data-v-3caaac61><i class="fas fa-file fa-fw" data-v-3caaac61></i></span> <span data-v-3caaac61>PAGE CONTENT</span></div> <div class="inner" data-v-3caaac61><div class="meta  " data-v-3caaac61><div class="meta-title" data-v-3caaac61>MySQL80 操作要点笔记</div> <div class="meta-info" data-v-3caaac61><div class="info-date" data-v-3caaac61><i class="fas fa-calendar-alt fa-fw" data-v-3caaac61></i>
+          2021-09-22
+        </div> <div class="info-updated" data-v-3caaac61><i class="fas fa-calendar-check fa-fw" data-v-3caaac61></i>
+          2021-09-22
+        </div> <div class="info-categories" data-v-3caaac61><i class="fas fa-folder-open fa-fw" data-v-3caaac61></i> <span data-v-3caaac61><!----> <a href="/category/数据库/" data-v-3caaac61>数据库</a></span></div> <div class="info-wordcount" data-v-3caaac61><i class="fas fa-file-word fa-fw" data-v-3caaac61></i>
+          6.9k
+        </div> <div class="info-wordcount" data-v-3caaac61><i class="fas fa-stopwatch fa-fw" data-v-3caaac61></i>
+          51 min.
+        </div></div></div> <div class="markdown-body content__default" data-v-3caaac61><h1 id="前言"><a href="#前言" class="header-anchor">#</a> 前言</h1> <p>参考视频：BV1Vy4y1z7EX</p> <p>CSDN: https://blog.csdn.net/INFINITE_WAR/article/details/120408155</p> <p>一些频繁出现的用例名字：
+emp  员工信息表
+dept  部门信息表
+ename  员工名
+job  工作
+sal  工资
+deptno  部门编号</p> <h1 id="一、开始"><a href="#一、开始" class="header-anchor">#</a> 一、开始</h1> <p>SQL现为手动模式（cmd操作，要管理员模式）</p> <div class="language-sql extra-class"><pre class="language-sql"><code>net <span class="token keyword">start</span> MySQL80  <span class="token comment">//打开MySQL80服务</span>
+net stop MySQL80   <span class="token comment">//关闭	</span>
+</code></pre></div><p><img alt="请添加图片描述" data-src="https://img-blog.csdnimg.cn/21fd39ea59774c04b87944f482587c35.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBASU5GSU5JVEVfV0FS,size_8,color_FFFFFF,t_70,g_se,x_16" loading="lazy" class="lazy"> <img alt="请添加图片描述" data-src="https://img-blog.csdnimg.cn/c98d0c774349457a895089d75fd2664e.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBASU5GSU5JVEVfV0FS,size_14,color_FFFFFF,t_70,g_se,x_16" loading="lazy" class="lazy">
+需要提前注册mysql账号</p> <p>xxxx.sql   为sql脚本文件，里面编写了大量的sql语句，在mysql中使用命令‘source   (文件路径)’ 即可执行脚本文件里的所有语句。</p> <p>开始会有一个基础数据库databases，里面嵌套着其他数据库。</p> <div class="language-bash extra-class"><pre class="language-bash"><code>mysql<span class="token operator">&gt;</span> show databases<span class="token punctuation">;</span>
++-----------------------------+
+<span class="token operator">|</span> Database                    <span class="token operator">|</span>
++-----------------------------+
+<span class="token operator">|</span> first_database              <span class="token operator">|</span>   //自己测试用的表在这里。也可以另行开辟
+<span class="token operator">|</span> information_schema          <span class="token operator">|</span>
+<span class="token operator">|</span> mysql                       <span class="token operator">|</span>
+<span class="token operator">|</span> performance_schema          <span class="token operator">|</span>
+<span class="token operator">|</span> sakila                      <span class="token operator">|</span>
+<span class="token operator">|</span> sys                         <span class="token operator">|</span>
+<span class="token operator">|</span> world                       <span class="token operator">|</span>
++-----------------------------+
+<span class="token number">7</span> rows <span class="token keyword">in</span> <span class="token builtin class-name">set</span> <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span>
+</code></pre></div><p>通过 ‘use （数据库名）’可以打开指定数据库，可以在该数据库中建立表并继续操作。</p> <p>打开first_database后使用show tables 命令显示所有的表。</p> <div class="language-bash extra-class"><pre class="language-bash"><code>mysql<span class="token operator">&gt;</span> show tables<span class="token punctuation">;</span>
++--------------------------+
+<span class="token operator">|</span> Tables_in_first_database <span class="token operator">|</span>
++--------------------------+
+<span class="token operator">|</span> score                    <span class="token operator">|</span>
+<span class="token operator">|</span> student                  <span class="token operator">|</span>
+<span class="token operator">|</span> tab1                     <span class="token operator">|</span>
++--------------------------+
+<span class="token number">3</span> rows <span class="token keyword">in</span> <span class="token builtin class-name">set</span> <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span>
+</code></pre></div><p>student的创建：</p> <p>mysql&gt; CREATE  TABLE  student (
+-&gt; id  INT(10)  NOT NULL  UNIQUE  PRIMARY KEY  ,
+-&gt; name  VARCHAR(20)  NOT NULL ,
+-&gt; sex  VARCHAR(4)  ,
+-&gt; birth  YEAR,
+-&gt; department  VARCHAR(20) ,
+-&gt; address  VARCHAR(50)
+-&gt; );
+Query OK, 0 rows affected, 1 warning (0.07 sec)</p> <p>score的创建：
+mysql&gt; CREATE  TABLE  score (
+-&gt; id  INT(10)  NOT NULL  UNIQUE  PRIMARY KEY  AUTO_INCREMENT ,
+-&gt; stu_id  INT(10)  NOT NULL ,
+-&gt; c_name  VARCHAR(20) ,
+-&gt; grade  INT(10)
+-&gt; );</p> <h1 id="二、基本命令"><a href="#二、基本命令" class="header-anchor">#</a> 二、基本命令</h1> <h2 id="part1"><a href="#part1" class="header-anchor">#</a> part1</h2> <p>(命令不区分大小写)</p> <p>exit//退出</p> <p>（以下命令要分号结尾，否则会出现无限的“--&gt;”符号让你输入）</p> <p>show databases;   //显示已有的数据库。 mysql默认自带了<strong>4</strong>个数据库。</p> <p>use (数据库名);        //表示正在使用对应的数据库</p> <p>create database （数据库名）;  //建立一个新的数据库</p> <p>show tables;           //查看<strong>某个</strong>数据库下有哪些表</p> <h2 id="part2"><a href="#part2" class="header-anchor">#</a> part2</h2> <p>select version();   //查看当前mysql版本号</p> <p>rowback    //撤销一步</p> <p>\c   //强制停止当前语句（可以跳出“--&gt;”死循环）</p> <h1 id="三、sql语句分类"><a href="#三、sql语句分类" class="header-anchor">#</a> 三、SQL语句分类</h1> <h2 id="dol"><a href="#dol" class="header-anchor">#</a> DOL</h2> <p>数据库查询语言(凡是带有select关键字的都是查询语句)</p> <p>select .....;</p> <p>注：select本身是不会对原本的数据库进行修改操作的。</p> <h2 id="dml"><a href="#dml" class="header-anchor">#</a> DML</h2> <p>数据库操作语言(凡是对表当中的数据进行增删改的都是DML)</p> <p>insert(增)</p> <p>delete(删)</p> <p>update(改)</p> <p>注DML主要操作的是<u>表中的数据</u></p> <h2 id="ddl"><a href="#ddl" class="header-anchor">#</a> DDL</h2> <p>数据定义语言(凡是带有create、drop、alter的都是DDL)</p> <p>注：DDL主要操作的是<u>表的结构</u>，而不是表中的数据。</p> <p>create:新建</p> <p>drop:删除</p> <p>alter：修改</p> <h2 id="tcl"><a href="#tcl" class="header-anchor">#</a> TCL</h2> <p>事务控制语言</p> <p>commit;   //事务提交</p> <p>rollback;  //事务回报</p> <h2 id="dcl"><a href="#dcl" class="header-anchor">#</a> DCL</h2> <p>数据控制语言</p> <p>grant;     //授权</p> <p>revoke;	//撤销权限</p> <h1 id="四、导入数据"><a href="#四、导入数据" class="header-anchor">#</a> 四、导入数据</h1> <p>mysql&gt; source  路径+文件名</p> <p>注：路径不能用中文</p> <p>查看表中数据： select * from 表名；</p> <p>查看表的结构：desc 表名;        //&lt;---desc是describe的缩写，可以用原词作命令</p> <h1 id="五、查询-单表查询part1"><a href="#五、查询-单表查询part1" class="header-anchor">#</a> 五、查询(单表查询part1)</h1> <h2 id="_1-查询一个字段"><a href="#_1-查询一个字段" class="header-anchor">#</a> 1.查询一个字段</h2> <p>select 字段名 from 表名;           //select 和from都是关键字，字段名和表名都是标识符</p> <h2 id="_2-查询多个字段"><a href="#_2-查询多个字段" class="header-anchor">#</a> 2.查询多个字段</h2> <p>select 字段名1，字段名2，....，字段名n   from   表名;</p> <h2 id="_3-查询所有字段"><a href="#_3-查询所有字段" class="header-anchor">#</a> 3.查询所有字段</h2> <p>方法一，把所有字段都写上：</p> <p>​		select 字段名1，字段名2，....，字段名n   from   表名;</p> <p>方法二，使用*：   //缺点：效率低，可读性差</p> <p>​		select  *   from   表名;      //回想一下查看表中数据的命令</p> <h2 id="_4-查询所有字段并去重"><a href="#_4-查询所有字段并去重" class="header-anchor">#</a> 4.查询所有字段并去重</h2> <p>select    distinct   字段名   from   表名     //distinct关键字必须出现在所有字段名之前</p> <h2 id="_5-给查询的列起别名"><a href="#_5-给查询的列起别名" class="header-anchor">#</a> 5.给查询的列起别名</h2> <p>select   (字段名  as  自定义新字段名)   from 表名;</p> <p>//只是修改名字后显示出来，原本的数据库没有改变。</p> <p>//若字段名有空格，要以  <strong>‘新字段名’</strong> 的形式写入命令（字符串统一使用单引号）。as可以用空格代替。</p> <p>可以对字段使用数学表达式，例如：</p> <p>​</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">select</span>  name <span class="token punctuation">,</span>  score<span class="token operator">*</span><span class="token number">12</span>  <span class="token keyword">from</span> student<span class="token punctuation">;</span>       <span class="token comment">//可以用  as  给score*12换名</span>
+</code></pre></div><p>会显示：</p> <p>+----------------------+-----------------------+</p> <p>​     name              |        score*12</p> <p>+----------------------+-----------------------+</p> <p>|      .................        .......................   |</p> <h2 id="_6-条件查询"><a href="#_6-条件查询" class="header-anchor">#</a> 6.条件查询</h2> <h3 id="_6-1关系运算符"><a href="#_6-1关系运算符" class="header-anchor">#</a> 6.1关系运算符</h3> <table><thead><tr><th style="text-align:center;">=</th> <th style="text-align:center;">等于</th></tr></thead> <tbody><tr><td style="text-align:center;">&lt;&gt; 或 !=</td> <td style="text-align:center;">不等于</td></tr> <tr><td style="text-align:center;">&lt;、&lt;=、&gt;、&gt;=</td> <td style="text-align:center;">小(大)(等)于，</td></tr> <tr><td style="text-align:center;">between (a)  and (b)</td> <td style="text-align:center;">&gt;=a   &amp;&amp; &lt;=b</td></tr> <tr><td style="text-align:center;">is null</td> <td style="text-align:center;">为空</td></tr> <tr><td style="text-align:center;">and</td> <td style="text-align:center;">与</td></tr> <tr><td style="text-align:center;">or</td> <td style="text-align:center;">或</td></tr> <tr><td style="text-align:center;">in</td> <td style="text-align:center;">包含,相当于多个or</td></tr> <tr><td style="text-align:center;">not</td> <td style="text-align:center;">非</td></tr> <tr><td style="text-align:center;">like</td> <td style="text-align:center;">模糊查询，支持 % 或 下划线 匹配</td></tr> <tr><td style="text-align:center;">%</td> <td style="text-align:center;">匹配任意字符</td></tr> <tr><td style="text-align:center;">下划线（_）</td> <td style="text-align:center;">匹配一个字符</td></tr></tbody></table> <h3 id="_6-2-条件查询语法格式"><a href="#_6-2-条件查询语法格式" class="header-anchor">#</a> 6.2 条件查询语法格式</h3> <p>（为了直观，句子将不写在一行里）</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">select</span> 
+
+      字段<span class="token number">1</span>，字段<span class="token number">2</span>，字段<span class="token number">3</span>  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+<span class="token keyword">from</span>
+
+      表名
+
+<span class="token keyword">where</span>
+
+​      条件<span class="token punctuation">;</span>
+</code></pre></div><h3 id="_6-3-比较不熟悉的关系运算符"><a href="#_6-3-比较不熟悉的关系运算符" class="header-anchor">#</a> 6.3 比较不熟悉的关系运算符</h3> <h4 id="_6-3-1-in-的用法"><a href="#_6-3-1-in-的用法" class="header-anchor">#</a> 6.3.1  in    的用法</h4> <p>例：筛选出工资为5000 或 6000 或 7000的所有员工</p> <div class="language-sql extra-class"><pre class="language-sql"><code>不用<span class="token operator">in</span>：<span class="token keyword">select</span>     num <span class="token punctuation">,</span> name <span class="token punctuation">,</span> job  <span class="token keyword">from</span>  tab1 
+
+​			<span class="token keyword">where</span>  wage<span class="token operator">=</span><span class="token number">5000</span>  <span class="token operator">or</span>  wage<span class="token operator">=</span><span class="token number">6000</span>   <span class="token operator">or</span>  wage<span class="token operator">=</span><span class="token number">7000</span><span class="token punctuation">;</span>
+
+使用<span class="token operator">in</span>: <span class="token keyword">select</span>     num <span class="token punctuation">,</span> name <span class="token punctuation">,</span> job  <span class="token keyword">from</span>  tab1 
+
+​			<span class="token keyword">where</span>  wage  <span class="token operator">in</span>  <span class="token punctuation">(</span><span class="token number">5000</span><span class="token punctuation">,</span><span class="token number">6000</span><span class="token punctuation">,</span><span class="token number">7000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h4 id="_6-3-2-like-的用法"><a href="#_6-3-2-like-的用法" class="header-anchor">#</a> 6.3.2  like   的用法</h4> <p>例：</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">select</span>  name  <span class="token keyword">from</span>  <span class="token keyword">table</span>  <span class="token keyword">where</span>   name  <span class="token operator">like</span>   <span class="token string">&quot;%A%&quot;</span><span class="token punctuation">;</span>
+</code></pre></div><p>筛选出姓名中含有“A”的姓名。</p> <p>其他例：</p> <div class="language-sql extra-class"><pre class="language-sql"><code>
+找出名字以T结尾的：
+
+​		<span class="token keyword">select</span>  name  <span class="token keyword">from</span>  <span class="token keyword">table</span>  <span class="token keyword">where</span>   name  <span class="token operator">like</span>   <span class="token string">&quot;%T&quot;</span><span class="token punctuation">;</span>
+
+找出名字以K开始的：
+
+​		<span class="token keyword">select</span>  name  <span class="token keyword">from</span>  <span class="token keyword">table</span>  <span class="token keyword">where</span>   name  <span class="token operator">like</span>   <span class="token string">&quot;K%&quot;</span><span class="token punctuation">;</span>
+
+找出第二个字母是A的：
+
+​		<span class="token keyword">select</span>  name  <span class="token keyword">from</span>  <span class="token keyword">table</span>  <span class="token keyword">where</span>   name  <span class="token operator">like</span>   <span class="token string">&quot;_A%&quot;</span><span class="token punctuation">;</span>
+
+找出第三个字母是R的：
+
+​		<span class="token keyword">select</span>  name  <span class="token keyword">from</span>  <span class="token keyword">table</span>  <span class="token keyword">where</span>   name  <span class="token operator">like</span>   <span class="token string">&quot;__R%&quot;</span><span class="token punctuation">;</span>
+
+</code></pre></div><p>从上例可以看出，所谓的模糊查找本质上和正则表达式匹配类似。</p> <h1 id="六、排序-单表查询part2"><a href="#六、排序-单表查询part2" class="header-anchor">#</a> 六、排序(单表查询part2)</h1> <h2 id="_1-语法"><a href="#_1-语法" class="header-anchor">#</a> 1.语法</h2> <div class="language-sql extra-class"><pre class="language-sql"><code>
+​<span class="token keyword">select</span> 
+
+​		字段名<span class="token number">1</span>，字段名<span class="token number">2.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+​<span class="token keyword">from</span>
+
+​		表名
+
+​<span class="token keyword">order</span> <span class="token keyword">by</span>
+
+​		指定字段名  ；    <span class="token comment">//==默认升序==</span>
+</code></pre></div><p>指定降序，则要写成       指定字段名	desc   ;</p> <p>指定升序，则要写成       指定字段名	asc   ;</p> <h2 id="_2-多字段排序"><a href="#_2-多字段排序" class="header-anchor">#</a> 2.多字段排序</h2> <div class="language-sql extra-class"><pre class="language-sql"><code>
+<span class="token keyword">select</span> 
+
+​		字段名<span class="token number">1</span>，字段名<span class="token number">2.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+​<span class="token keyword">from</span>
+
+​		表名
+
+​<span class="token keyword">order</span> <span class="token keyword">by</span>
+
+​		指定字段名<span class="token number">1</span>   （指定顺序）  ，指定字段名<span class="token number">2</span>  （指定顺序），<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>  ；
+</code></pre></div><p><u>从左到右优先排序</u>；</p> <h2 id="_3-根据字段位置排序"><a href="#_3-根据字段位置排序" class="header-anchor">#</a> 3.根据字段位置排序</h2> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">select</span>    name   <span class="token keyword">from</span>   <span class="token keyword">table</span>   <span class="token keyword">order</span>  <span class="token keyword">by</span>    <span class="token number">2</span>
+</code></pre></div><p>(指定字段名所在的列数，例句中指定第二列的字段) ;</p> <h2 id="_4-综合案例"><a href="#_4-综合案例" class="header-anchor">#</a> 4.综合案例</h2> <p>找出工资在1250和3000之间的员工信息，要求按照薪资降序排列。</p> <div class="language-sql extra-class"><pre class="language-sql"><code>
+<span class="token keyword">select</span>  
+
+​		ename <span class="token punctuation">,</span>sal
+
+<span class="token keyword">from</span>
+
+​		emp
+
+<span class="token keyword">where</span>
+
+​		sal  <span class="token operator">between</span>  <span class="token number">1250</span>  <span class="token operator">and</span>  <span class="token number">3000</span>
+
+<span class="token keyword">order</span> <span class="token keyword">by</span>
+
+​		sal  <span class="token keyword">desc</span>  <span class="token punctuation">;</span> 
+</code></pre></div><p>语句执行顺序：</p> <p>​		step1：from</p> <p>​		step2：where</p> <p>​		step3：select</p> <p>​		step4：order  by</p> <h1 id="七、数据处理函数-单表查询part3"><a href="#七、数据处理函数-单表查询part3" class="header-anchor">#</a> 七、数据处理函数(单表查询part3)</h1> <h2 id="_1-单行处理函数"><a href="#_1-单行处理函数" class="header-anchor">#</a> 1.单行处理函数</h2> <p>特点：输入一行，输出一行。</p> <table><thead><tr><th>lower/upper</th> <th>转换成小(大)写</th></tr></thead> <tbody><tr><td>substr</td> <td>取子串</td></tr> <tr><td>length</td> <td>取长度</td></tr> <tr><td>trim(字符串)</td> <td>去空格</td></tr> <tr><td>str_to_date</td> <td>将字符串转换成日期</td></tr> <tr><td>date_format</td> <td>格式化日期</td></tr> <tr><td>round(数值，保留几位小数(-1是保留到十位))</td> <td>四舍五入</td></tr> <tr><td>rand()   (直接使用会生成[0,1)的随机数)</td> <td>生成随机数</td></tr> <tr><td>ifnull(数据，该数据的null情况用什么值取代)</td> <td>将null转换成一个具体值</td></tr> <tr><td>concat(字符串1，字符串2)</td> <td>连接两个字符串</td></tr></tbody></table> <div class="language-sql extra-class"><pre class="language-sql"><code>用法：<span class="token keyword">select</span>    函数名<span class="token punctuation">(</span>参数<span class="token number">1</span>，参数<span class="token number">2</span>，<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span>   <span class="token keyword">as</span>   自定义列名     <span class="token keyword">from</span>   表名<span class="token punctuation">;</span>
+</code></pre></div><p>注：null加上数值的结果还是null，故要使用ifnull修改最初的null值。</p> <p><strong>分支处理</strong>(类似于编程里的if else语句)：</p> <p>例：当员工的工作岗位时MANAGER时，工资上调10%；当工作岗位时SALESMAN时，工资上调50%；其他不变。</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">select</span>
+
+​		ename <span class="token punctuation">,</span> job <span class="token punctuation">,</span>
+
+​		<span class="token operator">=</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token keyword">case</span>  job  <span class="token keyword">when</span>   <span class="token string">'MANAGER'</span>   <span class="token keyword">then</span>  sal <span class="token operator">*</span> <span class="token number">1.1</span>     <span class="token keyword">when</span>    <span class="token string">'SALESMAN'</span>    <span class="token keyword">then</span>   sal <span class="token operator">*</span> <span class="token number">1.5</span>  <span class="token keyword">else</span> sal  <span class="token keyword">end</span> <span class="token punctuation">)</span>   <span class="token keyword">as</span>  newsal<span class="token operator">=</span><span class="token operator">=</span>
+
+​<span class="token keyword">from</span> 
+
+​		emp<span class="token punctuation">;</span>
+</code></pre></div><h2 id="_2-多行处理函数-分组函数"><a href="#_2-多行处理函数-分组函数" class="header-anchor">#</a> 2.多行处理函数(分组函数)</h2> <p>特点：输入多行，输出一行。</p> <table><thead><tr><th>count(字段名)</th> <th>计数</th></tr></thead> <tbody><tr><td>sum(字段名)</td> <td>求和</td></tr> <tr><td>avg(字段名)</td> <td>平均值</td></tr> <tr><td>max(字段名)</td> <td>最大值</td></tr> <tr><td>min(字段名)</td> <td>最小值</td></tr></tbody></table> <p>注：1.分组函数在使用的时候必须先进行分组，然后使用。</p> <p>2.如果没有对数据进行分组，整张表默认为一组。</p> <p>3.分组函数会自动处理null值。</p> <p>4.count(具体字段)：表示统计该字段下所有不为null的元素的个数。</p> <p>count(*):统计表当中的总行数。</p> <p>5.分组函数<u>不能</u>中介用在 where 语句中。</p> <h1 id="八、分组查询-单表查询part4"><a href="#八、分组查询-单表查询part4" class="header-anchor">#</a> 八、分组查询(单表查询part4)</h1> <p>实际需求：先分组，再对每一组的数据进行操作。</p> <p>例：计算每个部门的工资和</p> <p>计算每个工作岗位的平均薪资</p> <p>找出每个工作岗位的最高薪资</p> <h2 id="语法"><a href="#语法" class="header-anchor">#</a> 语法</h2> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">select</span>             <span class="token comment">//==若有 group   by，则应该只能写group  by   后面跟着的字段名==,或分组函数</span>
+
+​		<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+<span class="token keyword">from</span>
+
+​		<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+<span class="token punctuation">(</span><span class="token keyword">where</span>  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span>
+
+<span class="token keyword">group</span>  <span class="token keyword">by</span>       <span class="token comment">//后面只能跟  参加分组的字段，以及分组函数</span>
+
+​		（字段名）<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+<span class="token punctuation">(</span><span class="token keyword">having</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span>    <span class="token comment">//作用和where 差不多，但是必须接在group  by后面</span>
+
+<span class="token punctuation">(</span><span class="token keyword">order</span> <span class="token keyword">by</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span>
+</code></pre></div><p>执行顺序：</p> <p>from  --&gt;  where  --&gt;  group by  --&gt;  select  --&gt;  order by</p> <p>例：找出<u>每个部门、不同岗位</u>的最高薪资</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">select</span>
+
+​		deptno<span class="token punctuation">,</span>job<span class="token punctuation">,</span><span class="token function">max</span><span class="token punctuation">(</span>sal<span class="token punctuation">)</span>
+
+<span class="token keyword">from</span>
+
+​		emp
+
+<span class="token keyword">group</span> <span class="token keyword">by</span>
+
+​		deptno  <span class="token punctuation">,</span>  job<span class="token punctuation">;</span>
+</code></pre></div><p>综合案例：</p> <p>找出每个岗位的平均薪资，要求平均薪资大于1500的，除MANAGER岗位之外，要求按照平均薪资降序排序。</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">select</span>
+
+​		job  <span class="token punctuation">,</span>  <span class="token function">avg</span><span class="token punctuation">(</span>sal<span class="token punctuation">)</span>  <span class="token keyword">as</span>  avgsal
+
+<span class="token keyword">from</span>
+
+​		emp
+
+<span class="token keyword">where</span>
+
+​		job  <span class="token operator">!=</span>  <span class="token string">'MANAGER'</span>
+
+<span class="token keyword">group</span> <span class="token keyword">by</span>
+
+​		job
+
+<span class="token keyword">having</span>
+
+​		<span class="token function">avg</span><span class="token punctuation">(</span>sal<span class="token punctuation">)</span>  <span class="token operator">&gt;</span>  <span class="token number">1500</span>
+
+<span class="token keyword">order</span> <span class="token keyword">by</span>
+
+​		avgsal  <span class="token keyword">desc</span><span class="token punctuation">;</span>
+</code></pre></div><h1 id="九、连接查询"><a href="#九、连接查询" class="header-anchor">#</a> 九、连接查询</h1> <p><strong>注：可以先去了解一下关系数据库的连接运算</strong>。</p> <p>连接查询的<u>目的</u>：多张表联合起来查询数据。</p> <p>连接的底层原理是<u>笛卡尔积</u>。若连接查询不附带任何注释，则会返回一个数据库字段之间笛卡尔积的结果。</p> <p>简单案例：查询每一个人所在的工作部门。</p> <p>//SQL92的解法</p> <div class="language-sql extra-class"><pre class="language-sql"><code>
+<span class="token keyword">select</span>   
+
+​		e<span class="token punctuation">.</span>ename  <span class="token punctuation">,</span>  d<span class="token punctuation">.</span>dname        <span class="token comment">//最好将字段所属的表名通过这种方式标出</span>
+
+<span class="token keyword">from</span>
+
+​		emp  e<span class="token punctuation">,</span>  dept  d            <span class="token comment">//表名空格后面为别名。</span>
+
+<span class="token keyword">where</span>
+
+​	    emp<span class="token punctuation">.</span>deptno  <span class="token operator">=</span>  dept<span class="token punctuation">.</span>deptno  <span class="token punctuation">;</span>          <span class="token comment">//表的连接条件，通过and可以写入进一步的过滤条件</span>
+</code></pre></div><h2 id="_9-1-内连接"><a href="#_9-1-内连接" class="header-anchor">#</a> 9.1 内连接</h2> <h3 id="_9-1-1-等值连接"><a href="#_9-1-1-等值连接" class="header-anchor">#</a> 9.1.1 等值连接</h3> <p>上例SQL99的语法</p> <div class="language-sql extra-class"><pre class="language-sql"><code>
+<span class="token keyword">select</span>
+
+​		e<span class="token punctuation">.</span>ename  <span class="token punctuation">,</span>  d<span class="token punctuation">.</span>dname
+
+<span class="token keyword">from</span>
+
+​		emp e
+
+<span class="token keyword">join</span>
+
+​		dept d
+
+<span class="token keyword">on</span>               <span class="token comment">//独立出来的连接条件</span>
+
+​		e<span class="token punctuation">.</span>deptno  <span class="token operator">=</span>  d<span class="token punctuation">.</span>deptno <span class="token punctuation">;</span>
+</code></pre></div><p>SQL92缺点：结构不清晰，表的连接条件，和后期进一步筛选的条件都放在了where中。</p> <p>SQL99的优点：表连接的条件是独立的，连接之后，若还要进一步筛选，再写where语句。</p> <p>SQL99连接语法：</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">select</span>
+
+​		<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+<span class="token keyword">from</span>
+
+​		a
+
+<span class="token keyword">join</span>
+
+​		b
+
+<span class="token keyword">on</span>
+
+​		a和b的连接条件
+
+<span class="token keyword">where</span>
+
+​		筛选条件
+</code></pre></div><h3 id="_9-1-2非等值连接"><a href="#_9-1-2非等值连接" class="header-anchor">#</a> 9.1.2非等值连接</h3> <p>where   下的筛选条件不是一个等量关系</p> <h3 id="_9-1-3自连接"><a href="#_9-1-3自连接" class="header-anchor">#</a> 9.1.3自连接</h3> <p>样例表：</p> <table><thead><tr><th>员工编号</th> <th>姓名</th> <th>上司编号</th></tr></thead> <tbody><tr><td>7369</td> <td>SMITH</td> <td>7902</td></tr> <tr><td>7499</td> <td>ALLEN</td> <td>7698</td></tr> <tr><td>7521</td> <td>WARD</td> <td>7698</td></tr> <tr><td>7566</td> <td>JONES</td> <td>7839&lt;==</td></tr> <tr><td>7654</td> <td>MARTIN</td> <td>7698</td></tr> <tr><td>7698</td> <td>BLAKE</td> <td>7839&lt;==</td></tr> <tr><td>7782</td> <td>CLARK</td> <td>7839&lt;==</td></tr> <tr><td>7788</td> <td>SCOTT</td> <td>7566</td></tr> <tr><td>7839&lt;==</td> <td>KING</td> <td>NULL</td></tr> <tr><td>7844</td> <td>TURNER</td> <td>7698</td></tr> <tr><td>7876</td> <td>ANAMS</td> <td>7788</td></tr> <tr><td>7900</td> <td>JAMES</td> <td>7698</td></tr> <tr><td>7902</td> <td>FORD</td> <td>7566</td></tr> <tr><td>7934</td> <td>MILLER</td> <td>7782</td></tr></tbody></table> <p>内连接用法：查询员工的上司，要求显示员工名和对应的领导名。</p> <p>注：同一个表用两个名称</p> <div class="language-sql extra-class"><pre class="language-sql"><code>
+<span class="token keyword">select</span>
+
+​		a<span class="token punctuation">.</span>姓名   <span class="token keyword">as</span>  <span class="token string">'员工名'</span>  ，  b<span class="token punctuation">.</span>姓名   <span class="token keyword">as</span>   ‘上司名’
+
+<span class="token keyword">from</span>
+
+​		emp  a
+
+<span class="token keyword">join</span> 
+
+​		emp  b
+
+<span class="token keyword">on</span>
+
+​		a<span class="token punctuation">.</span>上司编号  <span class="token operator">=</span>  b<span class="token punctuation">.</span>员工编号
+</code></pre></div><h2 id="_9-2-外连接"><a href="#_9-2-外连接" class="header-anchor">#</a> 9.2 外连接</h2> <p>例：给定一个存储员工信息的表emp  ，一个存储部门信息的表dept。</p> <p>要求连接员工姓名与他对应的部门，并将空的部门也一起显示。（因为有可能有的部门的人都不在表emp中）</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">select</span>             （右外连接或右链接） （emp  和  dept之间存在主次关系。dept为主）
+
+​		e<span class="token punctuation">.</span>ename <span class="token punctuation">,</span> d<span class="token punctuation">.</span>dname
+
+<span class="token keyword">from</span>
+
+​		emp  e    <span class="token keyword">right</span>  <span class="token keyword">join</span>  dept  d       <span class="token comment">//right 表示 右边的表中没有匹配成功的记录也要																																显示</span>
+
+<span class="token comment">//(左外连接)		dept   d   **left**    emp   e            这句话与上句话相同</span>
+
+<span class="token comment">//关键字right表示右边的表一定要全部显示出，left同理。</span>
+
+<span class="token keyword">on</span>
+
+​		e<span class="token punctuation">.</span>deptno <span class="token operator">=</span> d<span class="token punctuation">.</span>deptno  <span class="token punctuation">;</span>
+
+</code></pre></div><h2 id="_9-3-多表连接"><a href="#_9-3-多表连接" class="header-anchor">#</a> 9.3 多表连接</h2> <p>语法：</p> <div class="language-sql extra-class"><pre class="language-sql"><code>
+<span class="token keyword">select</span>
+
+​	  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+<span class="token keyword">from</span>
+
+​		 a
+
+<span class="token keyword">join</span>     b
+
+<span class="token keyword">on</span>
+
+​		 a 和 b 的连接条件
+
+<span class="token keyword">join</span>     c
+
+<span class="token keyword">on</span>
+
+​		 a 和 c 的连接条件
+
+。
+
+。
+
+。
+
+<span class="token keyword">join</span>     n
+
+<span class="token keyword">on</span>
+
+​		 a  和  n  的连接条件  <span class="token punctuation">;</span>
+</code></pre></div><p><u>注：内连接和外连接可以混合使用。</u></p> <p>例：找出每个员工的部门名称以及工资等级，要求：显示出员工名、部门名、薪资、薪资等级。</p> <div class="language-sql extra-class"><pre class="language-sql"><code>
+<span class="token keyword">select</span>
+
+​		e<span class="token punctuation">.</span>ename <span class="token punctuation">,</span> e<span class="token punctuation">.</span>sal <span class="token punctuation">,</span> d<span class="token punctuation">.</span>dname <span class="token punctuation">,</span> s<span class="token punctuation">.</span>grade
+
+<span class="token keyword">from</span>
+
+​		emp  e
+
+<span class="token keyword">join</span> 
+
+​		dept  d
+
+<span class="token keyword">on</span>
+
+​		e<span class="token punctuation">.</span>deptno  <span class="token operator">=</span>  d<span class="token punctuation">.</span>deptno
+
+<span class="token keyword">join</span>
+
+​		salgrade  s
+
+<span class="token keyword">on</span>
+
+​		e<span class="token punctuation">.</span>sal  <span class="token operator">between</span>   s<span class="token punctuation">.</span>losal    <span class="token operator">and</span>   s<span class="token punctuation">.</span>hisal  <span class="token punctuation">;</span>
+
+</code></pre></div><h2 id="_9-4-union-关键字"><a href="#_9-4-union-关键字" class="header-anchor">#</a> 9.4 union 关键字</h2> <p>数据量大的情况下union比普通连接效率高</p> <p>前提：连接的两个表选出的列数相同</p> <p>例：</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">select</span> ename<span class="token punctuation">,</span> job <span class="token keyword">from</span>  emp  <span class="token keyword">where</span>  job<span class="token operator">=</span><span class="token string">'MANAGER'</span>
+
+<span class="token keyword">union</span>
+
+<span class="token keyword">select</span>  ename <span class="token punctuation">,</span>  job <span class="token keyword">from</span> emp  <span class="token keyword">where</span>  job<span class="token operator">=</span><span class="token string">'SALESMAN'</span><span class="token punctuation">;</span>
+</code></pre></div><h1 id="十、子查询"><a href="#十、子查询" class="header-anchor">#</a> 十、子查询</h1> <p>select语句中嵌套select语句，嵌入的select语句称为子查询</p> <p>如：</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">select</span>
+
+​		<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>（<span class="token keyword">select</span>）<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+<span class="token keyword">from</span>
+
+​		<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>（<span class="token keyword">select</span>）<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+<span class="token keyword">where</span>
+
+​		<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>（<span class="token keyword">select</span>）<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+</code></pre></div><h2 id="_10-1-where中的子查询"><a href="#_10-1-where中的子查询" class="header-anchor">#</a> 10.1 where中的子查询</h2> <p>例：找出比最低工资高的员工姓名和工资。</p> <p>错误方法：</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">select</span>：
+
+​		ename  <span class="token punctuation">,</span>  sal
+
+<span class="token keyword">from</span>
+
+​		emp
+
+<span class="token keyword">where</span>
+
+​		sal <span class="token operator">&gt;</span> <span class="token function">min</span><span class="token punctuation">(</span>sal<span class="token punctuation">)</span> <span class="token punctuation">;</span>           <span class="token comment">//此句错误，min这种多组函数使用前必须先分组。</span>
+</code></pre></div><p>思路：</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token comment">//step1：查询最低工资</span>
+
+<span class="token keyword">select</span>    <span class="token function">min</span><span class="token punctuation">(</span>sal<span class="token punctuation">)</span>   <span class="token keyword">from</span>   emp <span class="token punctuation">;</span>    <span class="token comment">//假设查出为800</span>
+
+<span class="token comment">//step2：找出大于最小工资的员工</span>
+
+<span class="token keyword">select</span>    ename <span class="token punctuation">,</span> sal   <span class="token keyword">from</span>   emp   <span class="token keyword">where</span>   sal<span class="token operator">&gt;</span><span class="token number">800</span> <span class="token punctuation">;</span>
+
+<span class="token comment">//step3：合并前两步</span>
+
+<span class="token keyword">select</span>    ename <span class="token punctuation">,</span> sal   <span class="token keyword">from</span>   emp   <span class="token keyword">where</span>   sal<span class="token operator">&gt;</span> <span class="token operator">&lt;</span>u<span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="token keyword">select</span>  <span class="token function">min</span><span class="token punctuation">(</span>sal<span class="token punctuation">)</span>   <span class="token keyword">from</span>  emp <span class="token punctuation">)</span><span class="token operator">&lt;</span><span class="token operator">/</span>u<span class="token operator">&gt;</span> <span class="token punctuation">;</span>
+</code></pre></div><h2 id="_10-2-from中的子查询"><a href="#_10-2-from中的子查询" class="header-anchor">#</a> 10.2 from中的子查询</h2> <p>这种子查询可以将子查询的查询结果当成一个临时表。（技巧）</p> <p>例：找出每个岗位的平均工资的薪资等级。</p> <p>思路：</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token comment">//step1：找出每个岗位的平均工资（按照岗位分组求平均值）</span>
+
+<span class="token keyword">select</span>   job  <span class="token punctuation">,</span>  <span class="token function">avg</span><span class="token punctuation">(</span>sal<span class="token punctuation">)</span>   <span class="token keyword">from</span>   emp    <span class="token keyword">group</span>   <span class="token keyword">by</span>   job<span class="token punctuation">;</span>
+
+<span class="token comment">//step2：第一步得到了临时表 t 。现有薪资评级表 salgrade。</span>
+</code></pre></div><p>t  和  salgrade 连接</p> <div class="language-sql extra-class"><pre class="language-sql"><code>
+<span class="token keyword">select</span>
+
+​		t<span class="token punctuation">.</span><span class="token operator">*</span> <span class="token punctuation">,</span> s<span class="token punctuation">.</span>grade
+
+<span class="token keyword">from</span>
+
+​		t
+
+<span class="token keyword">join</span>
+
+​		salgrade s
+
+<span class="token keyword">on</span>
+
+​		t<span class="token punctuation">.</span><span class="token function">avg</span><span class="token punctuation">(</span>sal<span class="token punctuation">)</span>       <span class="token operator">between</span>   s<span class="token punctuation">.</span>losal   ans  s<span class="token punctuation">.</span>hisal <span class="token punctuation">;</span>
+
+<span class="token comment">//step3：合并前两步</span>
+
+<span class="token keyword">select</span>
+
+​		t<span class="token punctuation">.</span><span class="token operator">*</span> <span class="token punctuation">,</span> s<span class="token punctuation">.</span>grade
+
+<span class="token keyword">from</span>
+
+​		<span class="token punctuation">(</span><span class="token keyword">select</span>  job <span class="token punctuation">,</span> <span class="token operator">&lt;</span>u<span class="token operator">&gt;</span><span class="token function">avg</span><span class="token punctuation">(</span>sal<span class="token punctuation">)</span>  <span class="token keyword">as</span>  avgsal<span class="token operator">&lt;</span><span class="token operator">/</span>u<span class="token operator">&gt;</span>  <span class="token keyword">from</span>  emp  <span class="token keyword">group</span>  <span class="token keyword">by</span>  job<span class="token punctuation">)</span>  t
+
+<span class="token keyword">join</span>
+
+​		salgrade s
+
+<span class="token keyword">on</span>
+
+​		<span class="token operator">&lt;</span>u<span class="token operator">&gt;</span>t<span class="token punctuation">.</span>avgsal<span class="token operator">&lt;</span><span class="token operator">/</span>u<span class="token operator">&gt;</span>       <span class="token operator">between</span>   s<span class="token punctuation">.</span>losal   ans  s<span class="token punctuation">.</span>hisal <span class="token punctuation">;</span>
+</code></pre></div><h2 id="_10-3-select中的子查询"><a href="#_10-3-select中的子查询" class="header-anchor">#</a> 10.3 select中的子查询</h2> <p>例：找出每个员工的部门名称，要求显示员工名，部门名。</p> <div class="language-sql extra-class"><pre class="language-sql"><code>
+<span class="token keyword">select</span>
+
+​		e<span class="token punctuation">.</span>ename <span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">select</span>  d<span class="token punctuation">.</span>dname  <span class="token keyword">from</span>   dept  d    <span class="token keyword">where</span>    e<span class="token punctuation">.</span>deptno <span class="token operator">=</span> d<span class="token punctuation">.</span>deptno<span class="token punctuation">)</span> <span class="token keyword">as</span> 			dname
+
+<span class="token keyword">from</span>
+
+​		emp<span class="token punctuation">;</span>
+</code></pre></div><p>注：对于每一条记录，若子查询超过一条就会报错。</p> <h1 id="十一、分页查询"><a href="#十一、分页查询" class="header-anchor">#</a> 十一、分页查询</h1> <h2 id="_11-1-limit关键字"><a href="#_11-1-limit关键字" class="header-anchor">#</a> 11.1 limit关键字</h2> <p>目的：将查询结果集的一部分取出来。（搜索引擎搜索结果的分页）</p> <p>用法：</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">limit</span>    startindex，length       <span class="token comment">//写在order  by  后面</span>
+</code></pre></div><p>例：按照薪资排序，取出排名前5的员工。</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">select</span>  
+
+​		ename <span class="token punctuation">,</span> sal
+
+<span class="token keyword">from</span>
+
+​		emp
+
+<span class="token keyword">order</span> <span class="token keyword">by</span> 
+
+​		sal <span class="token keyword">desc</span>
+
+<span class="token keyword">limit</span>    <span class="token number">0</span><span class="token punctuation">,</span><span class="token number">5</span>        <span class="token comment">//也可以写成  limit   5。表中的记录从0开始。</span>
+</code></pre></div><h2 id="_11-2-分页"><a href="#_11-2-分页" class="header-anchor">#</a> 11.2 分页</h2> <p>每页显示pageSize条记录</p> <p>​		第pageNo页：limit （pageNo - 1）* pageSize  ， pageSize</p> <p>如：
+第1页：limit 0，3    [0  1  2]</p> <p>第2页：limit 3，3    [3  4  5]</p> <p>第3页：limit 6，3    [6  7  8]</p> <p>第4页：limit 9，3    [0  1  2]</p> <h1 id="十二、建表"><a href="#十二、建表" class="header-anchor">#</a> 十二、建表</h1> <div class="language-sql extra-class"><pre class="language-sql"><code>创建表格式：<span class="token keyword">create</span>  <span class="token keyword">table</span>  表名（字段名<span class="token number">1</span>  数据类型，字段名<span class="token number">2</span>  数据类型，。。）<span class="token punctuation">;</span>
+
+删除表格式：<span class="token keyword">drop</span>  <span class="token keyword">table</span>  <span class="token keyword">if</span>   <span class="token keyword">exists</span>    <span class="token punctuation">(</span>要删除的表名<span class="token punctuation">)</span> <span class="token punctuation">;</span>
+
+添加记录：<span class="token keyword">insert</span>  <span class="token keyword">into</span>   表名  <span class="token keyword">values</span><span class="token punctuation">(</span>字段名和值一一对应<span class="token punctuation">)</span>  <span class="token punctuation">;</span>
+</code></pre></div><p>常见数据类型：varchar(动态分配字符串内存)，char(静态分配)，int，bigint，float，double，date(短日期)，datetime（长日期），clob(字符大对象)，blob(二进制大对象)</p> <p>clob：可以存储最多4G 的大字符串（如文章）。</p> <p>blob：存储图片、声音、视频等流媒体数据。需要使用IO流</p> <h2 id="_12-1修改-update"><a href="#_12-1修改-update" class="header-anchor">#</a> 12.1修改（update）</h2> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">update</span>  
+
+​		表名  
+
+<span class="token keyword">set</span>  		<span class="token comment">//修改具体值</span>
+
+​		字段名<span class="token number">1</span><span class="token operator">=</span>值<span class="token number">1</span>，字段名<span class="token number">2</span><span class="token operator">=</span>值<span class="token number">2</span>，。。。
+
+<span class="token keyword">where</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">;</span><span class="token comment">//指定特定条件的记录，不写where默认修改所有记录</span>
+</code></pre></div><h2 id="_12-2删除记录delete-dml"><a href="#_12-2删除记录delete-dml" class="header-anchor">#</a> 12.2删除记录delete（DML）</h2> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">delete</span>   <span class="token keyword">from</span>   表名   <span class="token keyword">where</span>  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>；<span class="token comment">//不写where会删除所有数据</span>
+</code></pre></div><h2 id="_12-3插入多条记录"><a href="#_12-3插入多条记录" class="header-anchor">#</a> 12.3插入多条记录</h2> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">insert</span>  <span class="token keyword">into</span>  表名（字段名<span class="token number">1</span>，字段名<span class="token number">2</span>。。。）   <span class="token keyword">values</span>
+
+（元组一），
+
+（元组二），
+
+。。。，
+
+（元组n）<span class="token punctuation">;</span>   <span class="token comment">//元组数据类型必须与第一行的字段名一一对应</span>
+</code></pre></div><h2 id="_12-4快捷命令"><a href="#_12-4快捷命令" class="header-anchor">#</a> 12.4快捷命令</h2> <h3 id="_12-4-1-快速创建表"><a href="#_12-4-1-快速创建表" class="header-anchor">#</a> 12.4.1 快速创建表</h3> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">create</span>    <span class="token keyword">table</span>   新表名   <span class="token keyword">as</span>   <span class="token keyword">select</span>   <span class="token operator">*</span>  <span class="token keyword">from</span>   原表名<span class="token punctuation">;</span>   <span class="token comment">//select语句可以按需求扩充内容（如where，order by等）</span>
+</code></pre></div><h3 id="_12-4-2-快速删除数据"><a href="#_12-4-2-快速删除数据" class="header-anchor">#</a> 12.4.2 快速删除数据</h3> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">truncate</span>  <span class="token keyword">table</span>  表名 <span class="token punctuation">;</span>   <span class="token comment">//与‘delete   from   表名’     相同</span>
+</code></pre></div><p>truncate和delete的区别</p> <table><thead><tr><th>truncate</th> <th>delete</th></tr></thead> <tbody><tr><td>删除效率相对比较高，表被依次截断，物理删除</td> <td>表中的数据被删除了，但是删除的数据在硬盘上的真实存储空间不会被释放</td></tr> <tr><td>缺点：不支持撤销操作</td> <td>缺点：删除效率较低（一亿条记录时要1小时才能删完）</td></tr> <tr><td>有点：快速（数据量非常大的时候推荐使用。一亿条记录是删除时间不到1秒）</td> <td>优点：支持撤销操作</td></tr> <tr><td>是DDL语句</td> <td>是DML语句</td></tr></tbody></table> <h1 id="十三、约束"><a href="#十三、约束" class="header-anchor">#</a> 十三、约束</h1> <p>目的：确保数据的完整性、有效性。</p> <p>常见约束：非空约束(not null)、唯一性约束(unique)、主键约束(primary key ，PK)、外键约束(foreign key，FK)、检查约束(check)</p> <h2 id="_13-1-非空约束"><a href="#_13-1-非空约束" class="header-anchor">#</a> 13.1 非空约束</h2> <p>not null 约束的字段不能为NULL。</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">drop</span>  <span class="token keyword">table</span>  <span class="token keyword">if</span>  exist  t_vip<span class="token punctuation">;</span>
+
+<span class="token keyword">create</span>  <span class="token keyword">table</span>  t_vip<span class="token punctuation">(</span>
+
+    id  <span class="token keyword">int</span><span class="token punctuation">,</span>
+
+    name   carchar<span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span>   <span class="token operator">*</span><span class="token operator">*</span><span class="token operator">not</span>  <span class="token boolean">null</span><span class="token operator">*</span><span class="token operator">*</span>
+
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h2 id="_13-2-唯一性约束"><a href="#_13-2-唯一性约束" class="header-anchor">#</a> 13.2 唯一性约束</h2> <p>unique约束的字段不能重复，但是可以为NULL。</p> <p>使用例：</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">drop</span>  <span class="token keyword">table</span>  <span class="token keyword">if</span>  exist  t_vip<span class="token punctuation">;</span>
+
+<span class="token keyword">create</span>  <span class="token keyword">table</span>  t_vip<span class="token punctuation">(</span>
+
+    id  <span class="token keyword">int</span><span class="token punctuation">,</span>
+
+    name   carchar<span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span>   <span class="token operator">*</span><span class="token operator">*</span><span class="token keyword">unique</span><span class="token operator">*</span><span class="token operator">*</span><span class="token punctuation">,</span>            <span class="token comment">//该字段的内容不能重复</span>
+
+    email  <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span>
+
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>推广：不同字段在特定条件下可以联合设置为唯一性约束。（如：两个人姓名相同，但是电话号码不同。或者说一个人有多个电话号码记录）</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">drop</span>  <span class="token keyword">table</span>  <span class="token keyword">if</span>  exist  t_vip<span class="token punctuation">;</span>
+
+<span class="token keyword">create</span>  <span class="token keyword">table</span>  t_vip<span class="token punctuation">(</span>
+
+	id  <span class="token keyword">int</span><span class="token punctuation">,</span>
+
+	name   carchar<span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span> ，   
+
+	email  <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span>  ，
+
+	<span class="token keyword">unique</span><span class="token punctuation">(</span>name <span class="token punctuation">,</span> email<span class="token punctuation">)</span>      <span class="token comment">//联合唯一性</span>
+
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>下例为unique和not  null  联合使用</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">drop</span>  <span class="token keyword">table</span>  <span class="token keyword">if</span>  exist  t_vip<span class="token punctuation">;</span>
+
+<span class="token keyword">create</span>  <span class="token keyword">table</span>  t_vip<span class="token punctuation">(</span>
+
+	id  <span class="token keyword">int</span><span class="token punctuation">,</span>
+
+	name   carchar<span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span>   <span class="token operator">*</span><span class="token operator">*</span><span class="token operator">not</span>  <span class="token boolean">null</span>  <span class="token keyword">unique</span><span class="token operator">*</span><span class="token operator">*</span><span class="token punctuation">,</span>   <span class="token comment">//该字段的内容不能重复也不能为空</span>
+
+	email  <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span>
+
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>这种联合的效果就是主键约束，也就是说，可以直接用PK约束实现前两种约束的联合。</p> <h2 id="_13-3-主键约束"><a href="#_13-3-主键约束" class="header-anchor">#</a> 13.3 主键约束</h2> <p>术语：主键约束、主键字段、主键值</p> <p>主键例：学号、身份证......</p> <p>建议设为主键的类型：int、bigint、char等。（varchar不建议）</p> <p><strong>注：一个表中只能设置一个主键</strong></p> <p>特征：not  null  、 unique</p> <h3 id="_13-3-1-单一主键和复合主键-分类一"><a href="#_13-3-1-单一主键和复合主键-分类一" class="header-anchor">#</a> 13.3.1 单一主键和复合主键（分类一）</h3> <p>使用例：</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">drop</span>  <span class="token keyword">table</span>  <span class="token keyword">if</span>  exist  t_vip<span class="token punctuation">;</span>
+
+<span class="token keyword">create</span>  <span class="token keyword">table</span>  t_vip<span class="token punctuation">(</span>
+
+	id  <span class="token keyword">int</span><span class="token punctuation">,</span>
+
+	name   carchar<span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span>   <span class="token operator">*</span><span class="token operator">*</span><span class="token keyword">primary</span>  <span class="token keyword">key</span> <span class="token operator">*</span><span class="token operator">*</span>   ， 
+
+	email  <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span>
+
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>复合主键使用例：</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">drop</span>  <span class="token keyword">table</span>  <span class="token keyword">if</span>  exist  t_vip<span class="token punctuation">;</span>
+
+<span class="token keyword">create</span>  <span class="token keyword">table</span>  t_vip<span class="token punctuation">(</span>
+
+	id  <span class="token keyword">int</span><span class="token punctuation">,</span>
+
+	name   carchar<span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span> ，    
+
+	email  <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span>，
+
+	<span class="token keyword">primary</span>  <span class="token keyword">key</span>（id，name）     <span class="token comment">//号码、姓名同时相同时才算重复。</span>
+
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h3 id="_13-3-2-自然主键和业务主键-分类二"><a href="#_13-3-2-自然主键和业务主键-分类二" class="header-anchor">#</a> 13.3.2 自然主键和业务主键（分类二）</h3> <p>自然主键：主键值是一个自然数，和业务无关。&lt;==使用较多</p> <p>业务主键：主键值和业务关联，例如银行卡号。</p> <p>自动维护主键值使用例：</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">drop</span>  <span class="token keyword">table</span>  <span class="token keyword">if</span>  exist  t_vip<span class="token punctuation">;</span>
+
+<span class="token keyword">create</span>  <span class="token keyword">table</span>  t_vip<span class="token punctuation">(</span>
+
+	id  <span class="token keyword">int</span>    <span class="token operator">*</span><span class="token operator">*</span><span class="token keyword">primary</span>  <span class="token keyword">key</span>   <span class="token keyword">auto_increment</span><span class="token operator">*</span><span class="token operator">*</span>  
+
+	name   carchar<span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span> ，
+
+	email  <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span>
+
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h2 id="_13-4-外键约束"><a href="#_13-4-外键约束" class="header-anchor">#</a> 13.4 外键约束</h2> <p>相关术语：外键约束、外键字段(添加了外键约束的字段)、外键值(可以为null)。</p> <p>应用场景：处理学生和班级时，应当把班级额外设置为一个表再对学生进行外键约束。（t_class   ,  t_student）</p> <p>t_class</p> <table><thead><tr><th>classno</th> <th>classname</th></tr></thead> <tbody><tr><td>100</td> <td>一班</td></tr> <tr><td>101</td> <td>二班</td></tr></tbody></table> <p>t_student</p> <table><thead><tr><th>no</th> <th>name</th> <th>cno</th></tr></thead> <tbody><tr><td>1</td> <td>jack</td> <td>100</td></tr> <tr><td>2</td> <td>lucy</td> <td>100</td></tr> <tr><td>3</td> <td>lilei</td> <td>100</td></tr> <tr><td>4</td> <td>bob</td> <td>100</td></tr> <tr><td>5</td> <td>ben</td> <td>101</td></tr> <tr><td>6</td> <td>alice</td> <td>101</td></tr> <tr><td>7</td> <td>alex</td> <td>100</td></tr> <tr><td>8</td> <td>zhangsan</td> <td>101</td></tr></tbody></table> <p>t_class 是父表，t_student是子表。</p> <p>删除表的顺序：先删子，再删父。</p> <p>创建表的顺序：先创建父，再创建子。</p> <p>删除数据的顺序：先删子，再删父。</p> <p>插入数据的顺序：先插入父，再插入子。</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">drop</span>  <span class="token keyword">table</span>  <span class="token keyword">if</span>  exist   t_student<span class="token punctuation">;</span>
+
+<span class="token keyword">drop</span>  <span class="token keyword">table</span>  <span class="token keyword">if</span>  exist   t_class<span class="token punctuation">;</span>
+
+
+
+<span class="token keyword">create</span>  <span class="token keyword">table</span>  t_class<span class="token punctuation">(</span>
+
+​		classno  <span class="token keyword">int</span>  <span class="token keyword">primary</span>  <span class="token keyword">key</span><span class="token punctuation">,</span>
+
+​		classname   <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span>
+
+<span class="token punctuation">)</span>
+
+
+
+<span class="token keyword">create</span>  <span class="token keyword">table</span>  t_student<span class="token punctuation">(</span>
+
+​		<span class="token keyword">no</span>  <span class="token keyword">int</span>  <span class="token keyword">primary</span>   <span class="token keyword">key</span>  <span class="token keyword">auto_increment</span><span class="token punctuation">,</span>
+
+​		name  <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+
+​		cno  <span class="token keyword">int</span><span class="token punctuation">,</span>
+
+​		<span class="token operator">*</span><span class="token operator">*</span><span class="token keyword">foreign</span>  <span class="token keyword">key</span><span class="token punctuation">(</span>cno<span class="token punctuation">)</span>  <span class="token keyword">references</span>  t_class<span class="token punctuation">(</span>classno<span class="token punctuation">)</span><span class="token operator">*</span><span class="token operator">*</span>  
+
+<span class="token punctuation">)</span>
+</code></pre></div><h1 id="十四、存储引擎"><a href="#十四、存储引擎" class="header-anchor">#</a> 十四、存储引擎</h1> <p>注：存储引擎是mysql的特有术语。</p> <p>存储引擎即数据内容的存储方式，如：ANSI,UTF-8等。</p> <p>查看mysql支持哪些存储引擎：show  engines</p> <p>展示新建表的存储引擎：show  create  table  (表名)</p> <p>指定引擎使用例：</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">create</span>  <span class="token keyword">table</span>  t_product<span class="token punctuation">(</span>
+
+​		id  <span class="token keyword">int</span>  <span class="token keyword">primary</span>  <span class="token keyword">key</span> <span class="token punctuation">,</span>
+
+​		name  <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span>
+
+<span class="token punctuation">)</span><span class="token keyword">engine</span><span class="token operator">=</span><span class="token keyword">InnoDB</span>  <span class="token keyword">default</span>  <span class="token keyword">charset</span><span class="token operator">=</span>utf8<span class="token punctuation">;</span>
+</code></pre></div><h2 id="_14-1-my-isam存储引擎"><a href="#_14-1-my-isam存储引擎" class="header-anchor">#</a> 14.1 My ISAM存储引擎</h2> <p>使用三个文件表示每一个表：</p> <p>​		格式文件：存储表结构的定义   xxx.frm</p> <p>​		数据文件：存储表行的内容  xxx.MYD</p> <p>​		索引(目录)文件：存储表上索引   xxx.MYI</p> <p>特点：可以转换为压缩、只读表来节省空间。</p> <h2 id="_14-2-innodb存储引擎-默认引擎"><a href="#_14-2-innodb存储引擎-默认引擎" class="header-anchor">#</a> 14.2 InnoDB存储引擎（默认引擎）</h2> <p>InnoDB支持事务，支持数据库崩溃后自动恢复机制</p> <p>特点：非常安全，效率不高，不能压缩或转换为只读。</p> <p>InnoDB管理的表的特征：</p> <p>​		每个InnoDB表再数据库目录中以 .frm  格式文件表示</p> <p>​		InnoDB表空间tablespace被用于存储表的内容</p> <p>​		提供一组用来记录事务性活动的日志文件</p> <p>​		用COMMIT(提交)，SAVEPOINT以及ROOLBACK支持事务处理</p> <p>​		提供全ACID兼容</p> <p>​		在mysql服务器崩溃后会自动回复</p> <p>​		多版本(MVCC)和行级锁定</p> <p>​		支持外键及引用的完整性，包括级联删除和更新</p> <h2 id="_14-3-memory存储引擎"><a href="#_14-3-memory存储引擎" class="header-anchor">#</a> 14.3 MEMORY存储引擎</h2> <p>数据存储在内存中，且行的长度固定</p> <p>特点：查询速度快，不安全</p> <p>MEMORY管理的表的特征：</p> <p>​		在数据库目录内，每个表均以  .frm  格式的文件表示。</p> <p>​		表数据及索引被存储在内存中</p> <p>​		表级锁机制</p> <p>​		不能包含TEXT 或 BLOB字段</p> <h1 id="十五、事务-dml语句"><a href="#十五、事务-dml语句" class="header-anchor">#</a> 十五、事务(DML语句)</h1> <p>定义：一个事务是一个完整的业务逻辑。</p> <p>事务特性：</p> <p>​		A(原子性)：事务是最小的工作单元，不可再分。</p> <p>​		C(一致性)：一系列操作必须同时成功或同时失败。</p> <p>​		I(隔离性)：不同事务之间不影响</p> <p>​		D(持久性)：保存内容，提供保障。</p> <p>完整的业务逻辑例：</p> <p>​		业务：A转账10000元给B</p> <p>​		步骤：A的账户-10000，B的账户+10000。</p> <p>这一系列操作必须同时成功或同时失败。</p> <p>即，一个事务就是一系列的DML语句。</p> <p>注：InnoDB会提供一组用来记录事务性活动的日志文件</p> <p>如：</p> <p>事务开启，写入日志</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">insert</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+<span class="token keyword">insert</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+<span class="token punctuation">.</span>
+
+<span class="token punctuation">.</span>
+
+<span class="token punctuation">.</span>
+
+事务结束，写入日志          <span class="token comment">//提交事务</span>
+
+
+
+提交事务：<span class="token keyword">commit</span> ；语句
+
+回滚事务：<span class="token keyword">rollback</span> ；语句     <span class="token comment">//回到上一次提交的位置</span>
+
+关闭自动提交操作：<span class="token keyword">start</span>    <span class="token keyword">transaction</span>；
+</code></pre></div><h2 id="_15-1-事务隔离"><a href="#_15-1-事务隔离" class="header-anchor">#</a> 15.1 事务隔离</h2> <p>级别：</p> <p>​		读未提交：read  uncommitted(不提交也读到)			最低级</p> <p>​				事务A读到事务B未提交的数据。易产生脏数据(Dirty  Read)。</p> <p>​		读已提交：read  committed  (提交了才能读到)</p> <p>​				事务A只能读到事务B提交之后的数据。</p> <p>​				不可重复读数据。如：事务开启后，第一次读到的数据是3条，当前事务还没有结束，可能第二次在读取的时候，读到的数据是4条，3不等于4。</p> <p>​		可重复读：repeatable   read	(提交了也读不到)   //mysql默认级别</p> <p>​				读取的是数据的幻象，读到的都是事务刚开始时的数据。</p> <p>​		序列化：serializable			最高级</p> <p>​				效率低，但是解决了所有的问题</p> <p>​				这种级别表示事务排队，不能并发。</p> <h1 id="十六、索引"><a href="#十六、索引" class="header-anchor">#</a> 十六、索引</h1> <p>类似于书的目录，提高搜索效率。</p> <p>mysql查询的方式：1.全表扫描。2.根据索引检索</p> <p>索引必须排序。索引和TreeSet(底层是AVL)数据结构相同。</p> <p>在mysql中，索引是一个B树。</p> <p>复合索引：两个及以上字段联合起来添加一个索引。</p> <h2 id="_16-1-语法"><a href="#_16-1-语法" class="header-anchor">#</a> 16.1 语法</h2> <p>创建索引</p> <p>​</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">create</span>  <span class="token keyword">index</span>  emp_ename_index  <span class="token keyword">on</span>  emp<span class="token punctuation">(</span>ename<span class="token punctuation">)</span> <span class="token punctuation">;</span>
+
+​		给emp表的ename字段添加索引，命名：emp_ename_index
+</code></pre></div><p>删除索引</p> <p>​</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">drop</span>  <span class="token keyword">index</span>  emp_ename_index  <span class="token keyword">on</span>  emp<span class="token punctuation">;</span>
+
+​		将emp表上的emp_ename_index索引对象删除
+</code></pre></div><p>检查是否有索引</p> <p>​</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">explain</span>  <span class="token operator">*</span>  <span class="token keyword">from</span>   emp   <span class="token keyword">where</span>   ename  <span class="token operator">=</span>‘XXX’<span class="token punctuation">;</span>
+</code></pre></div><h2 id="_16-2-索引失效"><a href="#_16-2-索引失效" class="header-anchor">#</a> 16.2 索引失效</h2> <p>1.尽量避免模糊查询时以“%”开始。</p> <p>2.使用 or 关键字时两边的字段都要有索引，否则不会调用索引。</p> <p>3.使用复合索引的时候，没有使用左侧的列查找，索引会失效</p> <p>4.在where中索引列若参与的运算，索引会失效。</p> <p>5.在where中索引列使用了函数，索引会失效。</p> <p>......</p> <h2 id="_16-3索引分类"><a href="#_16-3索引分类" class="header-anchor">#</a> 16.3索引分类</h2> <p>索引是各种数据库进行优化的重要手段，优化的时候优先考虑的就是索引。</p> <p>分类一：单一索引、复合索引。</p> <p>分类二：主键索引、唯一性索引(在有unique约束的字段上添加索引)</p> <h1 id="_17、视图-view"><a href="#_17、视图-view" class="header-anchor">#</a> 17、视图(view)</h1> <p>创建视图对象：create  view  dept2_view  as  select  *  from  dept2;</p> <p>注：上面as关键字后的语句必须是DQL语句。</p> <p>删除视图：drop  view  dept2_view;</p> <p>对视图对象的增删改查，会导致原表被操作。</p> <p>视图本质就是将一块SQL语句进行封装，以便复用时节省空间。</p> <p>如：</p> <div class="language-sql extra-class"><pre class="language-sql"><code><span class="token keyword">create</span>  <span class="token keyword">view</span>	emp_dept_view
+
+<span class="token keyword">as</span>
+
+​		<span class="token keyword">select</span>
+
+​			e<span class="token punctuation">.</span>ename <span class="token punctuation">,</span>  e<span class="token punctuation">.</span>sal <span class="token punctuation">,</span> d<span class="token punctuation">.</span>dname
+
+​		<span class="token keyword">from</span>
+
+​			emp e
+
+​		<span class="token keyword">join</span>
+
+​			dept d
+
+​		<span class="token keyword">on</span>
+
+​			e<span class="token punctuation">.</span>deptno <span class="token operator">=</span> d<span class="token punctuation">.</span>deptno <span class="token punctuation">;</span>
+</code></pre></div><p>as  后面的整块SQL语句被封装进了emp_dept_view中</p> <h1 id="_18、数据库设计范式"><a href="#_18、数据库设计范式" class="header-anchor">#</a> 18、数据库设计范式</h1> <p>目的：设计合理的数据库表，避免数据冗余、空间浪费。</p> <p>分类：</p> <p>​		第一范式：要求任何一张表必须有主键，每一个字段的原子性不可再分。</p> <p>​		第二范式：建立在第一范式之上，要求所有非主键字段完全依赖主键，不要产生部分依赖。</p> <p>​		第三范式：建立在第二范式之上，要求所有非主关键字直接依赖主键，不要产生传递依赖。</p> <h2 id="_18-1-第一范式"><a href="#_18-1-第一范式" class="header-anchor">#</a> 18.1 第一范式</h2> <p>最核心最重要的范式，所有表的设计都要满足。</p> <p>有主键，且字段内容不可再分的表满足第一范式。</p> <h2 id="_18-2-第二范式"><a href="#_18-2-第二范式" class="header-anchor">#</a> 18.2 第二范式</h2> <table><thead><tr><th>学生编号(复合主键)</th> <th>教师编号(复合主键)</th> <th>学生姓名</th> <th>教师姓名</th></tr></thead> <tbody><tr><td>1001</td> <td>001</td> <td>张三</td> <td>王老师</td></tr> <tr><td>1002</td> <td>002</td> <td>李四</td> <td>赵老师</td></tr> <tr><td>1003</td> <td>001</td> <td>王五</td> <td>王老师</td></tr> <tr><td>1001</td> <td>002</td> <td>张三</td> <td>赵老师</td></tr></tbody></table> <p>这种表不符合第二范式，因为学生只依赖学生编号，老师只依赖教师编号，数据易冗余。</p> <p>为了满足第二范式，要将上面的表分解成多个子表(如下)。</p> <p>学生表</p> <table><thead><tr><th>学生编号(pk)</th> <th>学生名字</th></tr></thead> <tbody><tr><td>1001</td> <td>张三</td></tr> <tr><td>1002</td> <td>李四</td></tr> <tr><td>1003</td> <td>王五</td></tr></tbody></table> <p>教师表</p> <table><thead><tr><th>教师编号(pk)</th> <th>教师姓名</th></tr></thead> <tbody><tr><td>001</td> <td>王老师</td></tr> <tr><td>002</td> <td>赵老师</td></tr></tbody></table> <p>学生教师关系表</p> <table><thead><tr><th>id(pk)</th> <th>学生编号(fk)</th> <th>教师编号(fk)</th></tr></thead> <tbody><tr><td>1</td> <td>1001</td> <td>001</td></tr> <tr><td>2</td> <td>1002</td> <td>002</td></tr> <tr><td>3</td> <td>1003</td> <td>001</td></tr> <tr><td>4</td> <td>1001</td> <td>002</td></tr></tbody></table> <p><u>多对多设计技巧：多对多，三张表，关系表两个外键。</u></p> <h2 id="_18-3-第三范式"><a href="#_18-3-第三范式" class="header-anchor">#</a> 18.3 第三范式</h2> <table><thead><tr><th>学生编号(pk)</th> <th>学生姓名</th> <th>班级编号</th> <th>班级名称</th></tr></thead> <tbody><tr><td>1001</td> <td>张三</td> <td>01</td> <td>一班</td></tr> <tr><td>1002</td> <td>李四</td> <td>02</td> <td>二班</td></tr> <tr><td>1003</td> <td>王五</td> <td>03</td> <td>三班</td></tr> <tr><td>1004</td> <td>赵六</td> <td>04</td> <td>四班</td></tr></tbody></table> <p>上标满足第一、二范式。</p> <p>不满足第三范式，因为班级名称依赖班级编号，而班级编号又依赖学生编号，这就产生了传递依赖，会有数据冗余。</p> <p>为满足第三范式，可以将上标拆成两张表(如下)。</p> <p>班级表</p> <table><thead><tr><th>班级编号(pk)</th> <th>班级名称</th></tr></thead> <tbody><tr><td>01</td> <td>一班</td></tr> <tr><td>02</td> <td>二班</td></tr> <tr><td>03</td> <td>三班</td></tr> <tr><td>04</td> <td>四班</td></tr></tbody></table> <p>学生表</p> <table><thead><tr><th>学生编号(pk)</th> <th>学生姓名</th> <th>班级编号(fk)</th></tr></thead> <tbody><tr><td>1001</td> <td>张三</td> <td>01</td></tr> <tr><td>1002</td> <td>李四</td> <td>02</td></tr> <tr><td>1003</td> <td>王五</td> <td>03</td></tr> <tr><td>1004</td> <td>赵六</td> <td>04</td></tr></tbody></table> <p><u>第三范式设计技巧：一对多，两张表，多的表，加外键。</u></p> <h2 id="_18-4-总结表的设计"><a href="#_18-4-总结表的设计" class="header-anchor">#</a> 18.4 总结表的设计</h2> <p>一对多：</p> <p>​		一对多，两张表，多的表加外键。</p> <p>多对多：</p> <p>​		多对多，三张表，关系表两个外键。</p> <p>一对一：</p> <p>​		若字段过多，则要考虑拆成多个更小的表，并用外键加以联系。</p> <p>​		一对一，外键唯一。</p> <p>不过实践和理论之间存在偏差。</p> <p><b>从实践上来说</b>，设计表的最终目的都是为了满足客户的要求，有时会拿冗余换执行速度。因为在sql中，表和表之间连接次数越多，效率越低。(笛卡尔积)</p> <h1 id="可参考资料"><a href="#可参考资料" class="header-anchor">#</a> 可参考资料：</h1> <p>数据库范式：<a href="https://www.zhihu.com/question/24696366/answer/29189700" target="_blank" rel="noopener noreferrer">https://www.zhihu.com/question/24696366/answer/29189700<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p></div> <div class="tail" data-v-3caaac61><div class="ending" data-v-3caaac61><span data-v-3caaac61>The post above ended</span> <i class="far fa-dot-circle fa-fw" data-v-3caaac61></i> <span data-v-3caaac61>Thanks for your reading</span></div> <div class="friend" data-v-3caaac61><div data-v-3caaac61>Come on! Write some comments, and your suggestions will improve the quality of my creative!</div> <div class="button" data-v-3caaac61>FRIEND ME</div> <div class="qrcode" data-v-3caaac61><div data-v-3caaac61><img src="/assets/img/qq.png" data-v-3caaac61> <div data-v-3caaac61>QQ</div></div><div data-v-3caaac61><img src="/assets/img/wechat.png" data-v-3caaac61> <div data-v-3caaac61>WeChat</div></div></div></div> <div class="share" data-v-3caaac61><!----></div> <div class="license" data-v-3caaac61><div class="frame" data-v-3caaac61><div data-v-3caaac61><span data-v-3caaac61>Post Author:</span> <a target="_blank" href="/" data-v-3caaac61>Mitchell</a></div> <div data-v-3caaac61><span data-v-3caaac61>Post Link:</span> <a target="_blank" href="/" data-v-3caaac61>/</a></div> <div data-v-3caaac61><span data-v-3caaac61>Copyright Notice:</span> <span data-v-3caaac61>All articles/posts in this website are licensed under <a target="_blank" href="//creativecommons.org/licenses/by-nc-sa/4.0/"><i class="fab fa-creative-commons"></i> BY-NC-SA</a> unless stating additionally.</span></div></div></div> <div class="tags" data-v-3caaac61><a href="/tag/数据库/" data-v-3caaac61># 数据库</a><a href="/tag/SQL/" data-v-3caaac61># SQL</a></div> <div class="pn" data-v-3caaac61><!----> <a href="/post/a22e5b314d07688334dad4c5740d1a11/#" title="Newer Post: undefined" class="next" data-v-3caaac61></a></div></div> <div class="readmode" data-v-3caaac61><span data-v-3caaac61>Enable Read Mode</span> <i class="fas fa-book-open" data-v-3caaac61></i></div></div></div> <div class="Comment card" data-v-0b506543 data-v-55aed3a6><div class="caption" data-v-0b506543><span class="icon" data-v-0b506543><i class="fas fa-comments fa-fw" data-v-0b506543></i></span> <span data-v-0b506543>COMMENTS</span></div> <div class="inner" data-v-0b506543><!----></div> <div class="minimize" data-v-0b506543></div></div></div></div> <div class="Empty card" style="background-image:url('/assets/img/empty.png');" data-v-22aaa453 data-v-5f6ffb84></div></div> <div class="aside" data-v-5f6ffb84><div class="Aside" data-v-07032a5d data-v-5f6ffb84><div class="Panel" data-v-70581521 data-v-07032a5d><div class="card" data-v-70581521><div class="caption" data-v-70581521><span class="icon" data-v-70581521><i class="fas fa-folder-open fa-fw"></i></span> <span data-v-70581521>CATEGORIES</span></div> <div class="inner" data-v-70581521><a href="/category/语言/" style="font-size:1.1166666666666667rem;opacity:1;" data-v-70581521>语言</a><a href="/category/Blog/" style="font-size:0.9166666666666666rem;opacity:0.7272727272727273;" data-v-70581521>Blog</a><a href="/category/网络/" style="font-size:0.7833333333333333rem;opacity:0.5454545454545454;" data-v-70581521>网络</a><a href="/category/Note/" style="font-size:0.7833333333333333rem;opacity:0.5454545454545454;" data-v-70581521>Note</a><a href="/category/前端/" style="font-size:0.7833333333333333rem;opacity:0.5454545454545454;" data-v-70581521>前端</a><a href="/category/web开发/" style="font-size:0.8166666666666667rem;opacity:0.5909090909090909;" data-v-70581521>web开发</a><a href="/category/数据库/" style="font-size:0.8166666666666667rem;opacity:0.5909090909090909;" data-v-70581521>数据库</a><a href="/category/java框架/" style="font-size:0.7833333333333333rem;opacity:0.5454545454545454;" data-v-70581521>java框架</a><a href="/category/其他/" style="font-size:0.8166666666666667rem;opacity:0.5909090909090909;" data-v-70581521>其他</a><a href="/category/算法/" style="font-size:0.7833333333333333rem;opacity:0.5454545454545454;" data-v-70581521>算法</a><a href="/category/后端框架/" style="font-size:0.8166666666666667rem;opacity:0.5909090909090909;" data-v-70581521>后端框架</a><a href="/category/Spring/" style="font-size:0.8166666666666667rem;opacity:0.5909090909090909;" data-v-70581521>Spring</a><a href="/category/操作系统/" style="font-size:0.7833333333333333rem;opacity:0.5454545454545454;" data-v-70581521>操作系统</a><a href="/category/Plugin/" style="font-size:0.8166666666666667rem;opacity:0.5909090909090909;" data-v-70581521>Plugin</a><a href="/category/Hexo/" style="font-size:0.7833333333333333rem;opacity:0.5454545454545454;" data-v-70581521>Hexo</a></div> <!----> <div class="minimize" data-v-70581521></div></div><div class="card" data-v-70581521><div class="caption" data-v-70581521><span class="icon" data-v-70581521><i class="fas fa-tags fa-fw"></i></span> <span data-v-70581521>TAGS</span></div> <!----> <div class="inner" data-v-70581521><a href="/tag/2048/" style="font-size:0.7833333333333333rem;opacity:0.55;" data-v-70581521>2048</a><a href="/tag/JavaSE/" style="font-size:1.0833333333333333rem;opacity:1;" data-v-70581521>JavaSE</a><a href="/tag/Test/" style="font-size:0.7833333333333333rem;opacity:0.55;" data-v-70581521>Test</a><a href="/tag/HTTP/" style="font-size:0.7833333333333333rem;opacity:0.55;" data-v-70581521>HTTP</a><a href="/tag/HTTPS/" style="font-size:0.7833333333333333rem;opacity:0.55;" data-v-70581521>HTTPS</a><a href="/tag/Links/" style="font-size:0.7833333333333333rem;opacity:0.55;" data-v-70581521>Links</a><a href="/tag/JavaScript/" style="font-size:0.85rem;opacity:0.65;" data-v-70581521>JavaScript</a><a href="/tag/JavaWeb/" style="font-size:0.8166666666666667rem;opacity:0.6;" data-v-70581521>JavaWeb</a><a href="/tag/JavaEE/" style="font-size:0.85rem;opacity:0.65;" data-v-70581521>JavaEE</a><a href="/tag/XML/" style="font-size:0.7833333333333333rem;opacity:0.55;" data-v-70581521>XML</a><a href="/tag/vuepressBlog/" style="font-size:0.8166666666666667rem;opacity:0.6;" data-v-70581521>vuepressBlog</a><a href="/tag/娱乐/" style="font-size:0.8166666666666667rem;opacity:0.6;" data-v-70581521>娱乐</a><a href="/tag/高中回忆/" style="font-size:0.7833333333333333rem;opacity:0.55;" data-v-70581521>高中回忆</a><a href="/tag/algorithm/" style="font-size:0.7833333333333333rem;opacity:0.55;" data-v-70581521>algorithm</a><a href="/tag/操作系统/" style="font-size:0.7833333333333333rem;opacity:0.55;" data-v-70581521>操作系统</a><a href="/tag/command/" style="font-size:0.7833333333333333rem;opacity:0.55;" data-v-70581521>command</a><a href="/tag/数据库/" style="font-size:0.7833333333333333rem;opacity:0.55;" data-v-70581521>数据库</a><a href="/tag/SQL/" style="font-size:0.7833333333333333rem;opacity:0.55;" data-v-70581521>SQL</a><a href="/tag/C/C++/" style="font-size:0.7833333333333333rem;opacity:0.55;" data-v-70581521>C/C++</a><a href="/tag/音乐播放器/" style="font-size:0.7833333333333333rem;opacity:0.55;" data-v-70581521>音乐播放器</a><a href="/tag/old blog/" style="font-size:0.7833333333333333rem;opacity:0.55;" data-v-70581521>old blog</a><a href="/tag/diary/" style="font-size:0.7833333333333333rem;opacity:0.55;" data-v-70581521>diary</a></div> <div class="minimize" data-v-70581521></div></div></div> <div class="Audioplayer card" data-v-18c8023d data-v-07032a5d><div class="caption" data-v-18c8023d><span class="icon" data-v-18c8023d><i class="fas fa-music fa-fw" data-v-18c8023d></i></span> <span data-v-18c8023d>PLAYLIST</span></div> <div class="inner" style="height:calc(297px + 90px);" data-v-18c8023d><meting-js server="netease"type="playlist"id="7256148570"theme="var(--link)"list-max-height="297px"></meting-js></div> <div class="minimize" data-v-18c8023d></div></div> <!----> <div class="Toc card" data-v-022f25d3 data-v-07032a5d data-v-07032a5d><div class="caption" data-v-022f25d3><span class="icon" data-v-022f25d3><i class="fas fa-bookmark fa-fw" data-v-022f25d3></i></span> <span data-v-022f25d3>TABLE OF CONTENTS</span></div> <div class="inner" data-v-022f25d3><div data-v-022f25d3><ul><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#前言">前言</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#一、开始">一、开始</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#二、基本命令">二、基本命令</a><ul><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#part1">part1</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#part2">part2</a></li></ul></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#三、sql语句分类">三、SQL语句分类</a><ul><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#dol">DOL</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#dml">DML</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#ddl">DDL</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#tcl">TCL</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#dcl">DCL</a></li></ul></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#四、导入数据">四、导入数据</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#五、查询-单表查询part1">五、查询(单表查询part1)</a><ul><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_1-查询一个字段">1.查询一个字段</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_2-查询多个字段">2.查询多个字段</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_3-查询所有字段">3.查询所有字段</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_4-查询所有字段并去重">4.查询所有字段并去重</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_5-给查询的列起别名">5.给查询的列起别名</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_6-条件查询">6.条件查询</a><ul><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_6-1关系运算符">6.1关系运算符</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_6-2-条件查询语法格式">6.2 条件查询语法格式</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_6-3-比较不熟悉的关系运算符">6.3 比较不熟悉的关系运算符</a><ul><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_6-3-1-in-的用法">6.3.1  in    的用法</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_6-3-2-like-的用法">6.3.2  like   的用法</a></li></ul></li></ul></li></ul></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#六、排序-单表查询part2">六、排序(单表查询part2)</a><ul><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_1-语法">1.语法</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_2-多字段排序">2.多字段排序</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_3-根据字段位置排序">3.根据字段位置排序</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_4-综合案例">4.综合案例</a></li></ul></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#七、数据处理函数-单表查询part3">七、数据处理函数(单表查询part3)</a><ul><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_1-单行处理函数">1.单行处理函数</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_2-多行处理函数-分组函数">2.多行处理函数(分组函数)</a></li></ul></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#八、分组查询-单表查询part4">八、分组查询(单表查询part4)</a><ul><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#语法">语法</a></li></ul></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#九、连接查询">九、连接查询</a><ul><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_9-1-内连接">9.1 内连接</a><ul><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_9-1-1-等值连接">9.1.1 等值连接</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_9-1-2非等值连接">9.1.2非等值连接</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_9-1-3自连接">9.1.3自连接</a></li></ul></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_9-2-外连接">9.2 外连接</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_9-3-多表连接">9.3 多表连接</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_9-4-union-关键字">9.4 union 关键字</a></li></ul></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#十、子查询">十、子查询</a><ul><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_10-1-where中的子查询">10.1 where中的子查询</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_10-2-from中的子查询">10.2 from中的子查询</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_10-3-select中的子查询">10.3 select中的子查询</a></li></ul></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#十一、分页查询">十一、分页查询</a><ul><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_11-1-limit关键字">11.1 limit关键字</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_11-2-分页">11.2 分页</a></li></ul></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#十二、建表">十二、建表</a><ul><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_12-1修改-update">12.1修改（update）</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_12-2删除记录delete-dml">12.2删除记录delete（DML）</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_12-3插入多条记录">12.3插入多条记录</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_12-4快捷命令">12.4快捷命令</a><ul><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_12-4-1-快速创建表">12.4.1 快速创建表</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_12-4-2-快速删除数据">12.4.2 快速删除数据</a></li></ul></li></ul></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#十三、约束">十三、约束</a><ul><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_13-1-非空约束">13.1 非空约束</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_13-2-唯一性约束">13.2 唯一性约束</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_13-3-主键约束">13.3 主键约束</a><ul><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_13-3-1-单一主键和复合主键-分类一">13.3.1 单一主键和复合主键（分类一）</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_13-3-2-自然主键和业务主键-分类二">13.3.2 自然主键和业务主键（分类二）</a></li></ul></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_13-4-外键约束">13.4 外键约束</a></li></ul></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#十四、存储引擎">十四、存储引擎</a><ul><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_14-1-my-isam存储引擎">14.1 My ISAM存储引擎</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_14-2-innodb存储引擎-默认引擎">14.2 InnoDB存储引擎（默认引擎）</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_14-3-memory存储引擎">14.3 MEMORY存储引擎</a></li></ul></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#十五、事务-dml语句">十五、事务(DML语句)</a><ul><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_15-1-事务隔离">15.1 事务隔离</a></li></ul></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#十六、索引">十六、索引</a><ul><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_16-1-语法">16.1 语法</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_16-2-索引失效">16.2 索引失效</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_16-3索引分类">16.3索引分类</a></li></ul></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_17、视图-view">17、视图(view)</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_18、数据库设计范式">18、数据库设计范式</a><ul><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_18-1-第一范式">18.1 第一范式</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_18-2-第二范式">18.2 第二范式</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_18-3-第三范式">18.3 第三范式</a></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#_18-4-总结表的设计">18.4 总结表的设计</a></li></ul></li><li><a href="/post/a22e5b314d07688334dad4c5740d1a11/#可参考资料">可参考资料：</a></li></ul></div></div></div></div></div> <div class="footer" data-v-5f6ffb84><div data-v-5f6ffb84><div class="Footer" data-v-1e7563d3 data-v-5f6ffb84><div data-v-1e7563d3>© 2019 - 2022 Mitchell</div> <div data-v-1e7563d3></div> <div data-v-1e7563d3>Theme <a target="_blank" href="//github.com/jinyaoMa/vuepress-theme-mustom" title="vuepress-theme-mustom">Mustom</a> By <a target="_blank" href="//github.com/jinyaoMa" title="jinyaoMa">jinyaoMa</a></div> <div class="footerCount" data-v-1e7563d3><span title="Site total page views" data-v-1e7563d3><i class="fas fa-eye fa-fw" data-v-1e7563d3></i>
+      ∞
+    </span> <span title="Site total visitors" data-v-1e7563d3><i class="fas fa-user-tie fa-fw" data-v-1e7563d3></i>
+      ∞
+    </span> <span title="Site total word count" data-v-1e7563d3><i class="fas fa-file-word fa-fw" data-v-1e7563d3></i>
+      130.2k
+    </span></div> <div class="license" data-v-1e7563d3><a class="by-nc-sa" target="_blank" href="//creativecommons.org/licenses/by-nc-sa/4.0/" title="Creative Commons Attribution-Noncommercial-ShareAlike 4.0 International license"></a></div></div></div></div></div></div> <div class="Notification default hide" data-v-1c9c144c data-v-5f6ffb84><div class="frame" data-v-1c9c144c><div class="inner" data-v-1c9c144c><div class="icon" data-v-1c9c144c><i class="fas fa-exclamation-circle fa-fw"></i></div> <div class="msg" data-v-1c9c144c>DEFAULT</div></div></div></div></div><div class="global-ui"><!----><div id="live2d-widget" class="live2d-widget-container" style="position:fixed;right:48px;bottom:0px;width:180px;height:270px;z-index:99999;opacity:1;pointer-events:none;"><canvas id="live2d_canvas" width="180" height="270" class="live2d_canvas" style="position:absolute;left:0px;top:0px;width:180px;height:270px;"></canvas></div></div></div>
+    <script src="./assets/js/app.152d2abe.js" defer></script><script src="./assets/js/5.45f84343.js" defer></script><script src="./assets/js/30.3e2cac84.js" defer></script><script src="./assets/js/10.e02dcdbc.js" defer></script><script src="./assets/js/7.6b3198e2.js" defer></script>
+  </body>
+</html>
